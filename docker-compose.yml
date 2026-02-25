@@ -2,8 +2,8 @@ services:
   web:
     build: .
     ports:
-      - "3006:3006"
+      - "3007:3007"
     environment:
       - NODE_ENV=production
-      - PORT=3006
+      - PORT=3007
     restart: unless-stopped
