@@ -4,9 +4,18 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 
+interface User {
+  sub: string;
+  name?: string;
+  preferred_username?: string;
+  email?: string;
+  picture?: string;
+}
+
 export default function Navbar() {
   const [time, setTime] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const updateTime = () => {
@@ -23,6 +32,15 @@ export default function Navbar() {
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.authenticated) setUser(data.user);
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -47,13 +65,32 @@ export default function Navbar() {
             <span className="text-label text-muted">{time}</span>
           </div>
 
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="text-label text-fg hover:text-accent transition-colors"
-            data-cursor-hover
-          >
-            {menuOpen ? "Close" : "Menu"}
-          </button>
+          <div className="flex items-center gap-6">
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="text-label text-fg hover:text-accent transition-colors"
+                data-cursor-hover
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <a
+                href="/api/auth/login"
+                className="text-label text-fg hover:text-accent transition-colors"
+                data-cursor-hover
+              >
+                Login
+              </a>
+            )}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-label text-fg hover:text-accent transition-colors"
+              data-cursor-hover
+            >
+              {menuOpen ? "Close" : "Menu"}
+            </button>
+          </div>
         </div>
       </nav>
 
