@@ -26,12 +26,12 @@ export async function GET() {
 
     const apps = clients
       .filter((c: { is_disabled: boolean }) => !c.is_disabled)
-      .map((c: { client_id: string; name: string; description: string | null; logo_uri: string | null; redirect_uris: string[] }) => ({
+      .map((c: { client_id: string; name: string; description: string | null; logo_uri: string | null; post_logout_redirect_uris: string[] }) => ({
         client_id: c.client_id,
         name: c.name,
         description: c.description,
         logo_uri: c.logo_uri,
-        url: c.redirect_uris?.[0]?.replace(/\/callback$/, "") || null,
+        url: c.post_logout_redirect_uris?.[0] || null,
       }));
 
     return NextResponse.json({ apps });
