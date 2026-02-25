@@ -15,12 +15,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kyro — Engineer",
+  title: "Kyro",
   description:
     "Full stack developer, network engineer, and EE/CE student. Building systems that work.",
   keywords: ["software engineer", "full stack developer", "network engineering", "electrical engineering"],
   openGraph: {
-    title: "Kyro — Engineer",
+    title: "Kyro",
     description: "Full stack developer, network engineer, and EE/CE student.",
     type: "website",
   },
