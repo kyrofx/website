@@ -9,6 +9,7 @@
   let navigating = false;
   let departureCanvas = null;
   let departureTimer;
+  let pendingEntrance = null;
 
   function clearDeparture() {
     if (departureCanvas) navigating = false;
@@ -19,7 +20,7 @@
 
   function ready() {
     clearTimeout(window.asciiSafetyTimer);
-    root.classList.remove('ascii-pending', 'ascii-active');
+    root.classList.remove('ascii-pending', 'ascii-active', 'ascii-manual');
     window.dispatchEvent(new Event('ascii:ready'));
   }
 
@@ -99,11 +100,12 @@
     return cells;
   }
 
-  function play(direction, duration) {
-    if (preference.matches || !site || document.hidden) { ready(); return Promise.resolve(true); }
+  function play(direction, duration, userInitiated = false) {
+    if ((preference.matches && !userInitiated) || !site || document.hidden) { ready(); return Promise.resolve(true); }
     active?.finish(true);
     clearDeparture();
     root.classList.add('ascii-used');
+    root.classList.toggle('ascii-manual', userInitiated);
     return new Promise((resolve) => {
       let canvas;
       let frame;
@@ -124,36 +126,43 @@
         ready();
         resolve(proceed);
       };
-      active = { direction, finish };
+      let needsSample = true;
+      active = { direction, duration, userInitiated, finish, resize: () => { needsSample = true; } };
       try {
-        const width = innerWidth;
-        const height = innerHeight;
-        // Bound the grid even on large displays; mobile characters remain legible.
-        const cellWidth = Math.max(7, Math.ceil(width / 170));
-        const cellHeight = Math.round(cellWidth * 1.45);
-        const cells = samplePage(width, height, cellWidth, cellHeight);
-        if (!cells) { finish(); return; }
+        let width, height, cellWidth, cellHeight, cells, pixelRatio, centerX, centerY;
         canvas = document.createElement('canvas');
         canvas.className = 'ascii-screen';
         canvas.dataset.phase = direction;
         canvas.setAttribute('aria-hidden', 'true');
-        const pixelRatio = Math.min(devicePixelRatio || 1, 1.5);
-        canvas.width = Math.round(width * pixelRatio);
-        canvas.height = Math.round(height * pixelRatio);
         const context = canvas.getContext('2d');
         if (!context) { finish(); return; }
+        const sample = () => {
+          width = innerWidth;
+          height = innerHeight;
+          // Bound the grid even on large displays; mobile characters remain legible.
+          cellWidth = Math.max(7, Math.ceil(width / 170));
+          cellHeight = Math.round(cellWidth * 1.45);
+          cells = samplePage(width, height, cellWidth, cellHeight);
+          if (!cells) throw new Error('Canvas sampling unavailable');
+          pixelRatio = Math.min(devicePixelRatio || 1, 1.5);
+          canvas.width = Math.round(width * pixelRatio);
+          canvas.height = Math.round(height * pixelRatio);
+          const focus = site.querySelector('h1')?.getBoundingClientRect();
+          centerX = focus ? Math.min(width * .6, focus.left + focus.width / 2) : width / 2;
+          centerY = focus ? Math.min(height * .5, focus.top + focus.height / 2) : height * .4;
+          needsSample = false;
+        };
+        sample();
         document.body.append(canvas);
         root.classList.add('ascii-active');
         root.classList.remove('ascii-pending');
         clearTimeout(window.asciiSafetyTimer);
         const glyphs = '.:-=+*#%@';
-        const focus = site.querySelector('h1')?.getBoundingClientRect();
-        const centerX = focus ? Math.min(width * .6, focus.left + focus.width / 2) : width / 2;
-        const centerY = focus ? Math.min(height * .5, focus.top + focus.height / 2) : height * .4;
         const started = performance.now();
         const zoomStart = direction === 'leave' ? 1.15 : duration > 1000 ? 3.1 : 1.8;
         const draw = (now) => {
           try {
+            if (needsSample) sample();
             const elapsed = clamp((now - started) / duration);
             const progress = direction === 'leave' ? 1 - elapsed : elapsed;
             const zoom = 1 + (zoomStart - 1) * Math.pow(1 - clamp(progress / .7), 3);
@@ -192,29 +201,60 @@
           } catch { finish(); }
         };
         draw(started);
-        watchdog = setTimeout(finish, duration + 500);
+        if (!finished) watchdog = setTimeout(finish, duration + 500);
       } catch { finish(); }
     });
   }
 
+  function enter(duration, userInitiated = false) {
+    pendingEntrance = null;
+    if (preference.matches && !userInitiated) { ready(); return; }
+    // A background tab must not consume the intro before it can be seen.
+    if (document.hidden) {
+      pendingEntrance = { duration, userInitiated };
+      ready();
+      return;
+    }
+    play('enter', duration, userInitiated);
+  }
+
   const skipEntrance = () => {
+    pendingEntrance = null;
     if (active?.direction === 'enter') active.finish();
     clearDeparture();
   };
   document.addEventListener('pointerdown', skipEntrance, { capture: true, passive: true });
   document.addEventListener('wheel', skipEntrance, { passive: true });
   document.addEventListener('keydown', (event) => {
+    pendingEntrance = null;
     if (active?.direction === 'enter') active.finish();
     else if (event.key === 'Escape') { active?.finish(false); clearDeparture(); }
   });
-  window.addEventListener('resize', () => { active?.finish(); clearDeparture(); });
+  window.addEventListener('resize', () => { active?.resize(); clearDeparture(); });
   window.addEventListener('ascii:abort', () => { active?.finish(); clearDeparture(); });
-  window.addEventListener('pagehide', () => { active?.finish(false); clearDeparture(); });
+  window.addEventListener('pagehide', () => { pendingEntrance = null; active?.finish(false); clearDeparture(); });
   window.addEventListener('pageshow', (event) => {
-    if (event.persisted) { active?.finish(false); clearDeparture(); navigating = false; ready(); }
+    if (event.persisted) { pendingEntrance = null; active?.finish(false); clearDeparture(); navigating = false; ready(); }
   });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) active?.finish(); });
-  preference.addEventListener('change', () => { if (preference.matches) { active?.finish(); clearDeparture(); ready(); } });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (active?.direction === 'enter') pendingEntrance = { duration: active.duration, userInitiated: active.userInitiated };
+      active?.finish();
+    } else if (pendingEntrance) enter(pendingEntrance.duration, pendingEntrance.userInitiated);
+  });
+  preference.addEventListener('change', () => {
+    if (preference.matches) { pendingEntrance = null; active?.finish(); clearDeparture(); ready(); }
+  });
+
+  const replay = document.querySelector('[data-ascii-replay]');
+  if (replay && site) {
+    replay.hidden = false;
+    // An explicit request opts into one playback, including with Reduce Motion.
+    replay.addEventListener('click', () => {
+      window.scrollTo(0, 0);
+      enter(1850, true);
+    });
+  }
 
   document.addEventListener('click', async (event) => {
     const link = event.target.closest('a[href]');
@@ -235,6 +275,7 @@
   const navigation = performance.getEntriesByType('navigation')[0];
   let internal = false;
   try { internal = document.referrer && new URL(document.referrer).origin === location.origin; } catch { /* No referrer. */ }
-  if (!root.classList.contains('ascii-pending') || navigation?.type === 'back_forward' || preference.matches) ready();
-  else play('enter', internal && navigation?.type !== 'reload' ? 800 : 1850);
+  const boot = window.asciiBoot;
+  if (!boot?.requested || boot.interacted || navigation?.type === 'back_forward' || preference.matches) ready();
+  else enter(internal && navigation?.type !== 'reload' ? 800 : 1850);
 })();

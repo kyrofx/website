@@ -33,7 +33,7 @@ In a managed cloud environment with a TLS proxy, Next's existing Google Fonts bu
 
 After changing shared content, run `python3 scripts/build_site.py` and commit the generated HTML and sitemap with it. Python is an editing tool; deployment uses the committed output and does not require Python.
 
-Keep visible content to names, genuine facts, functional labels and links. Do not add eyebrows, taglines, project blurbs or decorative descriptions. The initial ASCII entrance lasts about 1.85 seconds; internal transitions use a 180 ms exit and 800 ms arrival. Interaction skips the entrance, reduced motion bypasses it, and failed enhancement scripts restore the underlying HTML.
+Keep visible content to names, genuine facts, functional labels and links. Do not add eyebrows, taglines, project blurbs or decorative descriptions. The initial ASCII entrance lasts about 1.85 seconds; internal transitions use a 180 ms exit and 800 ms arrival. Background tabs defer the entrance until visible, and resizing rebuilds its character grid without cancelling playback. Interaction skips the entrance, reduced motion bypasses automatic playback, and failed enhancement scripts restore the underlying HTML. The footer’s replay button explicitly starts one intro, including with reduced motion enabled. Generated CSS and script URLs include content hashes so deployments refresh cached assets.
 
 ## Check
 
@@ -49,9 +49,10 @@ With Python Playwright, Chromium at `/usr/bin/chromium`, and the application run
 ```sh
 PORTFOLIO_BASE_URL=http://127.0.0.1:3007 python3 tests/browser_smoke.py
 PORTFOLIO_BASE_URL=http://127.0.0.1:3007 python3 tests/ascii_smoke.py
+PORTFOLIO_BROWSER=webkit python3 tests/ascii_smoke.py
 ```
 
-Without `PORTFOLIO_BASE_URL`, those scripts serve and check the generated static pages in isolation. They cover all eight pages, mobile widths, keyboard navigation, language switching, filters, clipboard feedback, ASCII transitions, history and failure recovery.
+Without `PORTFOLIO_BASE_URL`, those scripts serve and check the generated static pages in isolation. The WebKit run requires `python3 -m playwright install --with-deps webkit`; `WEBKIT_EXECUTABLE_PATH` optionally selects a custom launcher. They cover all eight pages, mobile widths, keyboard navigation, language switching, filters, clipboard feedback, visible ASCII paint, transitions, replay, hidden tabs, resizing, delayed scripts, history and failure recovery.
 
 ## Existing application configuration
 

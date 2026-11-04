@@ -8,7 +8,11 @@
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.asciiBoot = { requested: !matchMedia('(prefers-reduced-motion: reduce)').matches, interacted: false };
+    for (const type of ['pointerdown', 'keydown', 'wheel']) {
+      document.addEventListener(type, () => { window.asciiBoot.interacted = true; }, { once: true, capture: true, passive: true });
+    }
+    if (window.asciiBoot.requested) {
       document.documentElement.classList.add('ascii-pending', 'ascii-used');
       window.asciiSafetyTimer = setTimeout(() => {
         document.documentElement.classList.remove('ascii-pending', 'ascii-active');
@@ -28,9 +32,9 @@
   <meta property="og:url" content="https://kyro.cat/projects.html">
   <meta property="og:locale" content="en_US">
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/site.css">
-  <script src="/js/site.js" defer></script>
-  <script src="/js/ascii.js" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=cde64fac6f">
+  <script src="/js/site.js?v=544891e6ce" defer></script>
+  <script src="/js/ascii.js?v=e365ff3aee" defer></script>
 </head>
 <body class="page-projects">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -66,7 +70,7 @@
 </ul></div>
           <div class="project-bottom"><a class="plain-link" href="https://github.com/kyrofx?tab=repositories">github / kyrofx <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
           <span class="filter-status" data-filter-status data-noun="projects" data-singular="project" role="status" aria-live="polite"></span></div></main>
-    <footer class="site-footer"><span>© kyro</span><a href="https://github.com/kyrofx/website">source <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/ca/projects.html" lang="ca" hreflang="ca">Català</a></footer>
+    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Replay the ASCII intro animation" hidden>replay intro</button><a href="https://github.com/kyrofx/website">source <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/ca/projects.html" lang="ca" hreflang="ca">Català</a></footer>
   </div>
 </body>
 </html>

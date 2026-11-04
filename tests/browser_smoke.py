@@ -106,6 +106,7 @@ def check():
             tab.goto(base + 'ca/projects.html')
             expect(tab.locator('.project:visible')).to_have_count(7)
             expect(tab.locator('.project-filters')).to_be_hidden()
+            expect(tab.locator('[data-ascii-replay]')).to_be_hidden()
             tab.locator('.navigation a[href$="/contact.html"]').click()
             expect(tab.locator('[data-copy]')).to_be_hidden()
             expect(tab.locator('a[href="mailto:kyro@kyro.dog"]')).to_be_visible()

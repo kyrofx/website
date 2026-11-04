@@ -13,7 +13,8 @@ def check():
     base = os.environ.get('PORTFOLIO_BASE_URL', f'http://127.0.0.1:{server.server_port}/').rstrip('/') + '/'
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(executable_path='/usr/bin/chromium', args=['--no-sandbox'])
+            browser = (p.webkit.launch(executable_path=os.environ.get('WEBKIT_EXECUTABLE_PATH')) if os.environ.get('PORTFOLIO_BROWSER') == 'webkit'
+                       else p.chromium.launch(executable_path='/usr/bin/chromium', args=['--no-sandbox']))
             context = browser.new_context(viewport={'width': 1280, 'height': 900})
             phases, errors = [], []
             context.expose_function('recordAsciiPhase', lambda phase: phases.append(phase))
@@ -69,14 +70,61 @@ def check():
             expect(page.locator('.ascii-screen')).to_have_count(0)
             page.reload(wait_until='domcontentloaded')
             page.set_viewport_size({'width': 390, 'height': 844})
-            expect(page.locator('.ascii-screen')).to_have_count(0)
+            expect(page.locator('.ascii-screen')).to_have_count(1)
+            page.wait_for_function("document.querySelector('.ascii-screen')?.width === Math.round(innerWidth * Math.min(devicePixelRatio, 1.5))")
+            expect(page.locator('.ascii-screen')).to_have_count(0, timeout=3000)
             page.reload(wait_until='domcontentloaded')
             page.emulate_media(reduced_motion='reduce')
             expect(page.locator('.ascii-screen')).to_have_count(0)
             page.reload(wait_until='domcontentloaded')
             expect(page.locator('.ascii-screen')).to_have_count(0)
             expect(page.locator('.site')).to_have_css('opacity', '1')
-            print('PASS: interaction, resize, and reduced motion skip safely')
+            page.locator('[data-ascii-replay]').click()
+            expect(page.locator('.ascii-screen')).to_be_visible()
+            assert page.evaluate('scrollY') == 0
+            expect(page.locator('.ascii-screen')).to_have_count(0, timeout=3000)
+            assert not page.locator('html').evaluate("element => element.classList.contains('ascii-manual')")
+            page.reload(wait_until='domcontentloaded')
+            expect(page.locator('.ascii-screen')).to_have_count(0)
+            print('PASS: resize preserves playback; interaction skips; reduced motion allows explicit replay only')
+
+            background = context.new_page()
+            background.add_init_script('''window.testHidden = true;
+              Object.defineProperty(document, 'hidden', {get: () => window.testHidden});''')
+            background.goto(base, wait_until='domcontentloaded')
+            expect(background.locator('.ascii-screen')).to_have_count(0)
+            expect(background.locator('.site')).to_have_css('opacity', '1')
+            background.evaluate("window.testHidden = false; document.dispatchEvent(new Event('visibilitychange'))")
+            expect(background.locator('.ascii-screen')).to_have_count(1)
+            background.evaluate("window.testHidden = true; document.dispatchEvent(new Event('visibilitychange'))")
+            expect(background.locator('.ascii-screen')).to_have_count(0)
+            background.evaluate("window.testHidden = false; document.dispatchEvent(new Event('visibilitychange'))")
+            expect(background.locator('.ascii-screen')).to_have_count(1)
+            expect(background.locator('.ascii-screen')).to_have_count(0, timeout=3000)
+            background.evaluate("window.testHidden = true; document.dispatchEvent(new Event('visibilitychange')); window.testHidden = false; document.dispatchEvent(new Event('visibilitychange'))")
+            expect(background.locator('.ascii-screen')).to_have_count(0)
+            background.locator('[data-ascii-replay]').click()
+            expect(background.locator('.ascii-screen')).to_be_visible()
+            background.keyboard.press('Escape')
+            background.close()
+            print('PASS: hidden tabs defer the intro, interrupted intros return, completed intros stay completed')
+
+            for interact in (False, True):
+                late = context.new_page()
+                held = []
+                late.route('**/js/ascii.js*', lambda route: held.append(route))
+                late.goto(base, wait_until='commit')
+                expect(late.locator('.site')).to_have_css('opacity', '1', timeout=4500)
+                expect(late.locator('[data-ascii-replay]')).to_be_hidden()
+                if interact:
+                    late.mouse.click(10, 10)
+                assert held, 'Renderer request was not intercepted'
+                held[0].continue_()
+                late.wait_for_load_state('domcontentloaded')
+                expect(late.locator('.ascii-screen')).to_have_count(0 if interact else 1)
+                expect(late.locator('[data-ascii-replay]')).to_be_visible()
+                late.close()
+            print('PASS: delayed scripts recover the intro without interrupting an active visitor')
 
             unavailable = context.new_page()
             unavailable.add_init_script('HTMLCanvasElement.prototype.getContext = () => null;')
@@ -87,7 +135,7 @@ def check():
             expect(unavailable).to_have_url(base + 'contact.html')
 
             blocked = context.new_page()
-            blocked.route('**/js/ascii.js', lambda route: route.abort())
+            blocked.route('**/js/ascii.js*', lambda route: route.abort())
             blocked.goto(base, wait_until='domcontentloaded')
             expect(blocked.locator('.site')).to_have_css('opacity', '1', timeout=4500)
             expect(blocked.locator('.ascii-screen')).to_have_count(0)

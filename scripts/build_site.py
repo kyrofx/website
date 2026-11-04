@@ -1,5 +1,6 @@
 """Generate the static English and Catalan pages: python3 scripts/build_site.py."""
 from html import escape
+from hashlib import sha256
 from pathlib import Path
 from urllib.parse import urljoin
 import re
@@ -38,6 +39,7 @@ COPY = {
         'copy_success': 'Email address copied.',
         'copy_failure': 'Copy unavailable. Select the email address to copy it.',
         'source': 'source',
+        'replay': 'replay intro', 'replay_label': 'Replay the ASCII intro animation',
         'description': 'Kyro. Projects, contact details, and GitHub repositories.',
         'foot_language': 'Català',
     },
@@ -57,12 +59,17 @@ COPY = {
         'copy_success': 'Adreça de correu copiada.',
         'copy_failure': 'No s’ha pogut copiar. Selecciona l’adreça de correu per copiar-la.',
         'source': 'codi font',
+        'replay': 'repeteix', 'replay_label': 'Repeteix l’animació d’introducció ASCII',
         'description': 'Kyro. Projectes, dades de contacte i repositoris de GitHub.',
         'foot_language': 'English',
     },
 }
 
 ARROW = '<svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg>'
+
+
+def asset(path):
+    return f'{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}'
 
 
 def url(lang, page):
@@ -144,7 +151,11 @@ def render(lang, page):
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {{
+    window.asciiBoot = {{ requested: !matchMedia('(prefers-reduced-motion: reduce)').matches, interacted: false }};
+    for (const type of ['pointerdown', 'keydown', 'wheel']) {{
+      document.addEventListener(type, () => {{ window.asciiBoot.interacted = true; }}, {{ once: true, capture: true, passive: true }});
+    }}
+    if (window.asciiBoot.requested) {{
       document.documentElement.classList.add('ascii-pending', 'ascii-used');
       window.asciiSafetyTimer = setTimeout(() => {{
         document.documentElement.classList.remove('ascii-pending', 'ascii-active');
@@ -164,9 +175,9 @@ def render(lang, page):
   <meta property="og:url" content="{url(lang, page)}">
   <meta property="og:locale" content="{'ca_ES' if lang == 'ca' else 'en_US'}">
   <link rel="icon" href="{prefix}img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="{prefix}css/site.css">
-  <script src="{prefix}js/site.js" defer></script>
-  <script src="{prefix}js/ascii.js" defer></script>
+  <link rel="stylesheet" href="{prefix}{asset('css/site.css')}">
+  <script src="{prefix}{asset('js/site.js')}" defer></script>
+  <script src="{prefix}{asset('js/ascii.js')}" defer></script>
 </head>
 <body class="page-{page}">
   <a class="skip-link" href="#main">{c['skip']}</a>
@@ -177,7 +188,7 @@ def render(lang, page):
       <nav class="language-switch" aria-label="{c['languages']}">{' <span aria-hidden="true">/</span> '.join(language_links)}</nav>
     </header>
     <main id="main" tabindex="-1">{content(lang, page)}</main>
-    <footer class="site-footer"><span>© kyro</span><a href="https://github.com/kyrofx/website">{c['source']} {ARROW}</a><a href="{other_path}" lang="{other}" hreflang="{other}">{c['foot_language']}</a></footer>
+    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="{c['replay_label']}" hidden>{c['replay']}</button><a href="https://github.com/kyrofx/website">{c['source']} {ARROW}</a><a href="{other_path}" lang="{other}" hreflang="{other}">{c['foot_language']}</a></footer>
   </div>
 </body>
 </html>

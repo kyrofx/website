@@ -81,6 +81,8 @@ h2 { font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 24px; }
 .site-footer { display: flex; align-items: center; gap: 30px; border-top: 1px solid var(--ink); padding: 22px 0 28px; color: var(--muted); font-size: 10px; }
 .site-footer span { margin-right: auto; }
 .site-footer a { display: inline-flex; align-items: center; gap: 7px; }
+.replay-intro { border: 0; padding: 4px 0; background: none; text-decoration: underline; text-underline-offset: 4px; }
+.replay-intro:hover { color: var(--ink); }
 
 .page-heading { padding: 64px 0 46px; }
 .page-heading h1 { font: 700 clamp(60px, 8.4vw, 110px)/1 Arial, Helvetica, sans-serif; letter-spacing: -.065em; margin-left: -.035em; animation: heading-in 700ms var(--ease) backwards; }
@@ -162,5 +164,5 @@ dd { font-size: 17px; overflow-wrap: anywhere; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .letter:hover, .letter-glyph { transform: none !important; }
   .ascii-pending .site { opacity: 1; }
-  .ascii-screen { display: none; }
+  html:not(.ascii-manual) .ascii-screen { display: none; }
 }
