@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
-    window.asciiBoot = { requested: !matchMedia('(prefers-reduced-motion: reduce)').matches, interacted: false };
+    window.asciiBoot = { requested: true, interacted: false };
     for (const type of ['pointerdown', 'keydown', 'wheel']) {
       document.addEventListener(type, () => { window.asciiBoot.interacted = true; }, { once: true, capture: true, passive: true });
     }
@@ -22,27 +22,27 @@
       }, 3500);
     }
   </script>
-  <link rel="canonical" href="https://kyro.cat/ca/projects.html">
-  <link rel="alternate" hreflang="en" href="https://kyro.cat/projects.html">
-  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects.html">
-  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/projects.html">
+  <link rel="canonical" href="https://kyro.cat/ca/projects">
+  <link rel="alternate" hreflang="en" href="https://kyro.cat/projects">
+  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects">
+  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/projects">
   <meta property="og:type" content="website">
   <meta property="og:title" content="projectes / kyro">
   <meta property="og:description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
-  <meta property="og:url" content="https://kyro.cat/ca/projects.html">
+  <meta property="og:url" content="https://kyro.cat/ca/projects">
   <meta property="og:locale" content="ca_ES">
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/site.css?v=cde64fac6f">
-  <script src="/js/site.js?v=544891e6ce" defer></script>
-  <script src="/js/ascii.js?v=e365ff3aee" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=6e374a6dea">
+  <script src="/js/site.js?v=ba50eaa205" defer></script>
+  <script src="/js/ascii.js?v=a8a8d61fe5" defer></script>
 </head>
 <body class="page-projects">
   <a class="skip-link" href="#main">Ves al contingut</a>
   <div class="site">
     <header class="site-header">
-      <a class="site-address" href="/ca/index.html" aria-label="kyro.cat — inici">kyro.cat</a>
-      <nav class="navigation" aria-label="Navegació"><a href="/ca/projects.html" aria-current="page">projectes</a><a href="/ca/about.html">sobre mi</a><a href="/ca/contact.html">contacte</a></nav>
-      <nav class="language-switch" aria-label="Llengua"><a href="/projects.html" lang="en" hreflang="en" aria-label="English">EN</a> <span aria-hidden="true">/</span> <a href="/ca/projects.html" lang="ca" hreflang="ca" aria-label="Català" aria-current="true">CA</a></nav>
+      <a class="site-address" href="/ca" aria-label="kyro.cat — inici">kyro.cat</a>
+      <nav class="navigation" aria-label="Navegació"><a href="/ca/projects" aria-current="page">projectes</a><a href="/ca/about">sobre mi</a><a href="/ca/contact">contacte</a></nav>
+      <nav class="language-switch" aria-label="Llengua"><a href="/projects" lang="en" hreflang="en" aria-label="English">EN</a> <span aria-hidden="true">/</span> <a href="/ca/projects" lang="ca" hreflang="ca" aria-label="Català" aria-current="true">CA</a></nav>
     </header>
     <main id="main" tabindex="-1"><header class="page-heading"><h1>projectes</h1></header><div class="project-filters" role="group" aria-label="Filtra els projectes per llenguatge" hidden><button type="button" data-filter="all" aria-pressed="true">tots</button><button type="button" data-filter="TypeScript" aria-pressed="false">TypeScript</button><button type="button" data-filter="Go" aria-pressed="false">Go</button><button type="button" data-filter="C++" aria-pressed="false">C++</button><button type="button" data-filter="Python" aria-pressed="false">Python</button><button type="button" data-filter="JavaScript" aria-pressed="false">JavaScript</button><button type="button" data-filter="HTML" aria-pressed="false">HTML</button></div>
           <div class="project-index"><ul class="project-list">
@@ -70,7 +70,7 @@
 </ul></div>
           <div class="project-bottom"><a class="plain-link" href="https://github.com/kyrofx?tab=repositories">github / kyrofx <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
           <span class="filter-status" data-filter-status data-noun="projectes" data-singular="projecte" role="status" aria-live="polite"></span></div></main>
-    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Repeteix l’animació d’introducció ASCII" hidden>repeteix</button><a href="https://github.com/kyrofx/website">codi font <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/projects.html" lang="en" hreflang="en">English</a></footer>
+    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Repeteix l’animació d’introducció ASCII" hidden>repeteix</button><a href="https://github.com/kyrofx/website">codi font <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/projects" lang="en" hreflang="en">English</a></footer>
   </div>
 </body>
 </html>

@@ -1,24 +1,14 @@
 // Content, navigation, and every project link work without JavaScript.
-const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-const runningAnimations = new Set();
 const elementAnimations = new WeakMap();
 
 function animate(element, frames, options = {}) {
   elementAnimations.get(element)?.cancel();
-  if (motionPreference.matches || !element.animate) return;
+  if (!element.animate) return;
   const animation = element.animate(frames, {
     duration: 550, easing: 'cubic-bezier(.16, 1, .3, 1)', ...options,
   });
-  runningAnimations.add(animation);
   elementAnimations.set(element, animation);
-  const clean = () => runningAnimations.delete(animation);
-  animation.addEventListener('finish', clean, { once: true });
-  animation.addEventListener('cancel', clean, { once: true });
 }
-
-motionPreference.addEventListener('change', () => {
-  if (motionPreference.matches) runningAnimations.forEach((animation) => animation.cancel());
-});
 
 // A shared highlight follows pointer and keyboard focus without moving the links.
 const navigation = document.querySelector('.navigation');
@@ -95,7 +85,7 @@ if (nameplate) {
     if (!frame) { previousTime = performance.now(); frame = requestAnimationFrame(tick); }
   };
   const respond = (event) => {
-    if (motionPreference.matches || !event.isPrimary) return;
+    if (!event.isPrimary) return;
     if (!bounds) measure();
     const vertical = Math.max(0, 1 - Math.abs(event.clientY - (bounds.top + bounds.height / 2)) / bounds.height);
     states.forEach((state, i) => {
@@ -111,7 +101,7 @@ if (nameplate) {
   const release = () => {
     states.forEach((state) => { state.tx = 0; state.ty = 0; state.tr = 0; });
     letters.forEach((letter) => letter.classList.remove('is-near'));
-    if (!motionPreference.matches) start();
+    start();
   };
   const reset = () => {
     cancelAnimationFrame(frame);
@@ -122,7 +112,7 @@ if (nameplate) {
       letters[i].classList.remove('is-near');
     });
     bounds = null;
-    name.classList.toggle('is-kinetic', !motionPreference.matches);
+    name.classList.add('is-kinetic');
   };
   nameplate.addEventListener('pointerenter', (event) => { measure(); respond(event); });
   nameplate.addEventListener('pointermove', respond);
@@ -134,7 +124,6 @@ if (nameplate) {
   window.addEventListener('blur', reset);
   window.addEventListener('scroll', () => { bounds = null; }, { passive: true });
   document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
-  motionPreference.addEventListener('change', reset);
   reset();
 }
 
@@ -148,7 +137,7 @@ document.querySelectorAll('.project a').forEach((link) => {
 
 function observeEntrances() {
   if (!('IntersectionObserver' in window)) return;
-  const targets = document.querySelectorAll('.home-content h2, .project, .contact-links li, .facts > div, .contact-details > div, .site-footer');
+  const targets = document.querySelectorAll('.home-content h2, .project, .contact-links li, .about-location > div, .homelab h2, .lab-stats > div, .contact-details > div, .site-footer');
   const assembled = new WeakSet();
   if (document.documentElement.classList.contains('ascii-used')) {
     targets.forEach((target) => {

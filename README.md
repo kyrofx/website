@@ -24,7 +24,7 @@ In a managed cloud environment with a TLS proxy, Next's existing Google Fonts bu
 
 ## Portfolio
 
-`next.config.ts` maps `/`, the English `.html` pages, and `/ca` / `/ca/*.html` to the generated files in `public/portfolio/`. Other routes, including `/dashboard` and `/api/*`, keep their existing behavior and styles. Local links are absolute so Catalan navigation works with Next's trailing-slash normalization.
+`next.config.ts` maps `/`, `/projects`, `/about`, `/contact` and their `/ca` equivalents to generated documents in `public/portfolio/`. Navigation, language switches, canonical URLs and the sitemap use these clean routes. Old `.html` and `/index` URLs redirect permanently, preserving query strings and fragments. Other routes, including `/dashboard` and `/api/*`, keep their existing behavior and styles.
 
 - Shared markup and translated content: `scripts/build_site.py`
 - Styles: `public/portfolio/css/site.css`
@@ -33,7 +33,9 @@ In a managed cloud environment with a TLS proxy, Next's existing Google Fonts bu
 
 After changing shared content, run `python3 scripts/build_site.py` and commit the generated HTML and sitemap with it. Python is an editing tool; deployment uses the committed output and does not require Python.
 
-Keep visible content to names, genuine facts, functional labels and links. Do not add eyebrows, taglines, project blurbs or decorative descriptions. The initial ASCII entrance lasts about 1.85 seconds; internal transitions use a 180 ms exit and 800 ms arrival. Background tabs defer the entrance until visible, and resizing rebuilds its character grid without cancelling playback. Interaction skips the entrance, reduced motion bypasses automatic playback, and failed enhancement scripts restore the underlying HTML. The footer’s replay button explicitly starts one intro, including with reduced motion enabled. Generated CSS and script URLs include content hashes so deployments refresh cached assets.
+Keep visible content to names, genuine facts, functional labels and links. Do not add eyebrows, taglines, project blurbs or decorative descriptions. About contains the supplied location and homelab figures; the onboard memory figure is not labelled as VRAM.
+
+The initial ASCII entrance lasts about 1.85 seconds; internal transitions use a 180 ms exit and 800 ms arrival. Background tabs defer the entrance until visible, and resizing rebuilds its character grid without cancelling playback. Interaction skips the entrance, and failed enhancement scripts restore the underlying HTML. The footer’s replay button restarts the intro. Per the site owner's instruction, the portfolio's animations play regardless of the system's reduced-motion setting. Generated CSS and script URLs include content hashes so deployments refresh cached assets.
 
 ## Check
 
@@ -52,7 +54,7 @@ PORTFOLIO_BASE_URL=http://127.0.0.1:3007 python3 tests/ascii_smoke.py
 PORTFOLIO_BROWSER=webkit python3 tests/ascii_smoke.py
 ```
 
-Without `PORTFOLIO_BASE_URL`, those scripts serve and check the generated static pages in isolation. The WebKit run requires `python3 -m playwright install --with-deps webkit`; `WEBKIT_EXECUTABLE_PATH` optionally selects a custom launcher. They cover all eight pages, mobile widths, keyboard navigation, language switching, filters, clipboard feedback, visible ASCII paint, transitions, replay, hidden tabs, resizing, delayed scripts, history and failure recovery.
+Without `PORTFOLIO_BASE_URL`, those scripts serve and check the generated static pages in isolation. The WebKit run requires `python3 -m playwright install --with-deps webkit`; `WEBKIT_EXECUTABLE_PATH` optionally selects a custom launcher. They cover all eight pages, mobile widths, keyboard navigation, language switching, filters, clipboard feedback, visible ASCII paint, transitions, replay, hidden tabs, resizing, delayed scripts, history and failure recovery. The browser suite also verifies permanent legacy redirects and unchanged dashboard/API access when pointed at the Next.js server. Animation checks cover loading, reloading and navigation with reduced motion enabled.
 
 ## Existing application configuration
 

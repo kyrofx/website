@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>https://kyro.cat/</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca"/></url>
-  <url><loc>https://kyro.cat/projects.html</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/projects.html"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects.html"/></url>
-  <url><loc>https://kyro.cat/about.html</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/about.html"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about.html"/></url>
-  <url><loc>https://kyro.cat/contact.html</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/contact.html"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/contact.html"/></url>
+  <url><loc>https://kyro.cat/projects</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/projects"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects"/></url>
+  <url><loc>https://kyro.cat/about</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/about"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about"/></url>
+  <url><loc>https://kyro.cat/contact</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/contact"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/contact"/></url>
   <url><loc>https://kyro.cat/ca</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca"/></url>
-  <url><loc>https://kyro.cat/ca/projects.html</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/projects.html"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects.html"/></url>
-  <url><loc>https://kyro.cat/ca/about.html</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/about.html"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about.html"/></url>
-  <url><loc>https://kyro.cat/ca/contact.html</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/contact.html"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/contact.html"/></url>
+  <url><loc>https://kyro.cat/ca/projects</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/projects"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects"/></url>
+  <url><loc>https://kyro.cat/ca/about</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/about"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about"/></url>
+  <url><loc>https://kyro.cat/ca/contact</loc><xhtml:link rel="alternate" hreflang="en" href="https://kyro.cat/contact"/><xhtml:link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/contact"/></url>
 </urlset>

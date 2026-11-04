@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
-    window.asciiBoot = { requested: !matchMedia('(prefers-reduced-motion: reduce)').matches, interacted: false };
+    window.asciiBoot = { requested: true, interacted: false };
     for (const type of ['pointerdown', 'keydown', 'wheel']) {
       document.addEventListener(type, () => { window.asciiBoot.interacted = true; }, { once: true, capture: true, passive: true });
     }
@@ -22,34 +22,34 @@
       }, 3500);
     }
   </script>
-  <link rel="canonical" href="https://kyro.cat/contact.html">
-  <link rel="alternate" hreflang="en" href="https://kyro.cat/contact.html">
-  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/contact.html">
-  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/contact.html">
+  <link rel="canonical" href="https://kyro.cat/contact">
+  <link rel="alternate" hreflang="en" href="https://kyro.cat/contact">
+  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/contact">
+  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/contact">
   <meta property="og:type" content="website">
   <meta property="og:title" content="contact / kyro">
   <meta property="og:description" content="Kyro. Projects, contact details, and GitHub repositories.">
-  <meta property="og:url" content="https://kyro.cat/contact.html">
+  <meta property="og:url" content="https://kyro.cat/contact">
   <meta property="og:locale" content="en_US">
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/site.css?v=cde64fac6f">
-  <script src="/js/site.js?v=544891e6ce" defer></script>
-  <script src="/js/ascii.js?v=e365ff3aee" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=6e374a6dea">
+  <script src="/js/site.js?v=ba50eaa205" defer></script>
+  <script src="/js/ascii.js?v=a8a8d61fe5" defer></script>
 </head>
 <body class="page-contact">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="site">
     <header class="site-header">
-      <a class="site-address" href="/index.html" aria-label="kyro.cat — home">kyro.cat</a>
-      <nav class="navigation" aria-label="Navigation"><a href="/projects.html">projects</a><a href="/about.html">about</a><a href="/contact.html" aria-current="page">contact</a></nav>
-      <nav class="language-switch" aria-label="Language"><a href="/contact.html" lang="en" hreflang="en" aria-label="English" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/ca/contact.html" lang="ca" hreflang="ca" aria-label="Català">CA</a></nav>
+      <a class="site-address" href="/" aria-label="kyro.cat — home">kyro.cat</a>
+      <nav class="navigation" aria-label="Navigation"><a href="/projects">projects</a><a href="/about">about</a><a href="/contact" aria-current="page">contact</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="/contact" lang="en" hreflang="en" aria-label="English" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/ca/contact" lang="ca" hreflang="ca" aria-label="Català">CA</a></nav>
     </header>
     <main id="main" tabindex="-1"><header class="page-heading"><h1>contact</h1></header><dl class="contact-details">
       <div><dt>email</dt><dd><a href="mailto:kyro@kyro.dog">kyro@kyro.dog</a><button class="copy-button" data-copy="kyro@kyro.dog" data-success="Email address copied." data-failure="Copy unavailable. Select the email address to copy it." data-copied="copied" aria-label="Copy email address" hidden>copy</button></dd></div>
       <div><dt>github</dt><dd><a href="https://github.com/kyrofx">kyrofx <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a></dd></div>
       <div><dt>discord</dt><dd>@kyrofx</dd></div>
     </dl><p class="copy-status" data-copy-status role="status" aria-live="polite"></p></main>
-    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Replay the ASCII intro animation" hidden>replay intro</button><a href="https://github.com/kyrofx/website">source <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/ca/contact.html" lang="ca" hreflang="ca">Català</a></footer>
+    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Replay the ASCII intro animation" hidden>replay intro</button><a href="https://github.com/kyrofx/website">source <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/ca/contact" lang="ca" hreflang="ca">Català</a></footer>
   </div>
 </body>
 </html>

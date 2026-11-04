@@ -8,6 +8,7 @@ import os
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.parse import urlsplit
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -17,6 +18,15 @@ ROOT = Path(__file__).resolve().parents[1] / 'public' / 'portfolio'
 class QuietHandler(SimpleHTTPRequestHandler):
     def log_message(self, *_args):
         pass
+
+    def translate_path(self, path):
+        # Serve the generated documents at their public routes for isolated checks.
+        route = urlsplit(path).path
+        if route in ['/', '/ca']:
+            path = route.rstrip('/') + '/index.html'
+        elif route in ['/projects', '/about', '/contact', '/ca/projects', '/ca/about', '/ca/contact']:
+            path = route + '.html'
+        return super().translate_path(path)
 
 
 def check():
@@ -36,12 +46,31 @@ def check():
                 page.set_viewport_size({'width': width, 'height': 1000})
                 for locale in ['', 'ca/']:
                     for route in ['index', 'projects', 'about', 'contact']:
-                        response = page.goto(base + locale + route + '.html', wait_until='networkidle')
+                        path = (locale.rstrip('/') if route == 'index' else locale + route)
+                        response = page.goto(base + path, wait_until='networkidle')
                         assert response.status == 200
                         expect(page.locator('h1')).to_be_visible()
                         expect(page.locator('html')).to_have_attribute('lang', 'ca' if locale else 'en')
                         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), (width, locale, route)
                 print(f'PASS: all eight pages at {width}px')
+
+            if os.environ.get('PORTFOLIO_BASE_URL'):
+                for locale in ['', 'ca/']:
+                    for route in ['index', 'projects', 'about', 'contact']:
+                        destination = '/' + (locale.rstrip('/') if route == 'index' else locale + route)
+                        for prefix in ['', 'portfolio/']:
+                            response = context.request.get(base + prefix + locale + route + '.html?from=bookmark', max_redirects=0)
+                            assert response.status == 308, (response.url, response.status)
+                            redirect = urlsplit(response.headers['location'])
+                            assert redirect.path == destination and redirect.query == 'from=bookmark', response.headers
+                    response = context.request.get(base + locale + 'index', max_redirects=0)
+                    assert response.status == 308
+                    assert urlsplit(response.headers['location']).path == '/' + locale.rstrip('/')
+                page.goto(base + 'ca/about.html?from=bookmark#main', wait_until='domcontentloaded')
+                expect(page).to_have_url(base + 'ca/about?from=bookmark#main')
+                assert context.request.get(base + 'dashboard', max_redirects=0).status == 200
+                assert context.request.get(base + 'api/auth/me', max_redirects=0).status == 401
+                print('PASS: old HTML links redirect permanently, query/fragment survive, dashboard and API remain reachable')
 
             page.set_viewport_size({'width': 1440, 'height': 1050})
             page.goto(base)
@@ -49,7 +78,7 @@ def check():
             expect(page.locator('.skip-link')).to_be_focused()
             page.keyboard.press('Enter')
             expect(page.locator('main')).to_be_focused()
-            page.locator('.navigation a[href$="/projects.html"]').click()
+            page.locator('.navigation a[href$="/projects"]').click()
             expect(page.locator('.project:visible')).to_have_count(7)
             page.locator('[data-filter="C++"]').click()
             expect(page.locator('.project:visible')).to_have_count(2)
@@ -58,13 +87,13 @@ def check():
             page.keyboard.press('Space')
             expect(page.locator('.project:visible')).to_have_count(7)
             page.locator('.language-switch a[lang="ca"]').click()
-            expect(page).to_have_url(base + 'ca/projects.html')
+            expect(page).to_have_url(base + 'ca/projects')
             page.locator('[data-filter="Go"]').click()
             expect(page.locator('.project:visible')).to_have_count(1)
             expect(page.locator('[data-filter-status]')).to_have_text('1 projecte')
             print('PASS: skip link, keyboard navigation, filters, and equivalent-language links')
 
-            page.goto(base + 'ca/contact.html')
+            page.goto(base + 'ca/contact')
             page.locator('[data-copy]').click()
             expect(page.locator('[data-copy-status]')).to_have_text('Adreça de correu copiada.')
             assert page.evaluate('navigator.clipboard.readText()') == 'kyro@kyro.dog'
@@ -91,23 +120,25 @@ def check():
             page.locator('.project a').first.hover()
             expect(page.locator('.project a').first).to_have_css('color', 'rgb(255, 255, 255)')
             page.emulate_media(reduced_motion='reduce')
-            assert page.locator('.letter-glyph').first.evaluate('(el) => getComputedStyle(el).animationName') == 'none'
-            assert page.locator('.project-name').first.evaluate('(el) => getComputedStyle(el).transitionDuration') == '0s'
-            expect(page.locator('.name')).not_to_have_class('name is-kinetic')
-            page.wait_for_function("document.getAnimations().length === 0")
+            assert page.locator('.project-name').first.evaluate('(el) => getComputedStyle(el).transitionDuration') != '0s'
+            expect(page.locator('.name')).to_have_class('name is-kinetic')
+            letter.hover()
+            page.wait_for_function("parseFloat(document.querySelectorAll('.letter')[1].style.getPropertyValue('--letter-y')) < -3")
+            page.mouse.move(0, 0)
             page.set_viewport_size({'width': 390, 'height': 844})
             page.goto(base, wait_until='networkidle')
+            expect(page.locator('.ascii-screen')).to_have_count(0)
             page.mouse.move(0, 0)
             page.screenshot(path='/tmp/kyro-revision-mobile.png', full_page=True)
-            print('PASS: hover treatment and reduced motion')
+            print('PASS: hover and spring effects remain enabled with reduced motion requested')
 
             nojs = browser.new_context(java_script_enabled=False)
             tab = nojs.new_page()
-            tab.goto(base + 'ca/projects.html')
+            tab.goto(base + 'ca/projects')
             expect(tab.locator('.project:visible')).to_have_count(7)
             expect(tab.locator('.project-filters')).to_be_hidden()
             expect(tab.locator('[data-ascii-replay]')).to_be_hidden()
-            tab.locator('.navigation a[href$="/contact.html"]').click()
+            tab.locator('.navigation a[href$="/contact"]').click()
             expect(tab.locator('[data-copy]')).to_be_hidden()
             expect(tab.locator('a[href="mailto:kyro@kyro.dog"]')).to_be_visible()
             print('PASS: content, navigation, projects, and email without JavaScript')

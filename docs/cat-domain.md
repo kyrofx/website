@@ -12,10 +12,10 @@ The entire small portfolio has equivalent English and Catalan pages. The Catalan
 
 | English | Catalan |
 | --- | --- |
-| `/` | `/ca/` |
-| `/projects.html` | `/ca/projects.html` |
-| `/about.html` | `/ca/about.html` |
-| `/contact.html` | `/ca/contact.html` |
+| `/` | `/ca` |
+| `/projects` | `/ca/projects` |
+| `/about` | `/ca/about` |
+| `/contact` | `/ca/contact` |
 
 The EN / CA switch always opens the corresponding translation. Catalan pages render without JavaScript. Each has `lang="ca"`, reciprocal `hreflang` links, a canonical URL under `https://kyro.cat`, and inclusion in the sitemap. Search engines can reach the content normally. Keep both versions synchronized and publicly reachable when deploying.
 

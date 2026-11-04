@@ -42,11 +42,25 @@ class StaticSiteTests(unittest.TestCase):
                 target = ((ROOT / unquote(parsed.path).lstrip('/')) if parsed.path.startswith('/') else (path.parent / unquote(parsed.path))).resolve() if parsed.path else path
                 if target.is_dir():
                     target = target / 'index.html'
+                elif not target.suffix:
+                    target = target.with_suffix('.html')
                 with self.subTest(page=path.name, ref=ref):
                     self.assertTrue(target.is_file(), f'Missing {target}')
                     if parsed.fragment and target.suffix == '.html':
                         ids = [a.get('id') for t, a in Document(target.read_text()).tags]
                         self.assertIn(parsed.fragment, ids)
+
+    def test_public_page_urls_are_clean(self):
+        for lang in SITE.COPY:
+            for page in SITE.PAGES:
+                for tag, attrs in Document(SITE.render(lang, page)).tags:
+                    if tag not in ['a', 'link'] or not attrs.get('href'):
+                        continue
+                    parsed = urlparse(attrs['href'])
+                    if parsed.netloc and parsed.netloc != 'kyro.cat':
+                        continue
+                    self.assertNotIn('.html', parsed.path)
+                    self.assertNotIn('/index', parsed.path)
 
     def test_language_metadata_and_navigation(self):
         for lang in ['en', 'ca']:

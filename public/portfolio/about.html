@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
-    window.asciiBoot = { requested: !matchMedia('(prefers-reduced-motion: reduce)').matches, interacted: false };
+    window.asciiBoot = { requested: true, interacted: false };
     for (const type of ['pointerdown', 'keydown', 'wheel']) {
       document.addEventListener(type, () => { window.asciiBoot.interacted = true; }, { once: true, capture: true, passive: true });
     }
@@ -22,30 +22,39 @@
       }, 3500);
     }
   </script>
-  <link rel="canonical" href="https://kyro.cat/about.html">
-  <link rel="alternate" hreflang="en" href="https://kyro.cat/about.html">
-  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about.html">
-  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/about.html">
+  <link rel="canonical" href="https://kyro.cat/about">
+  <link rel="alternate" hreflang="en" href="https://kyro.cat/about">
+  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about">
+  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/about">
   <meta property="og:type" content="website">
   <meta property="og:title" content="about / kyro">
   <meta property="og:description" content="Kyro. Projects, contact details, and GitHub repositories.">
-  <meta property="og:url" content="https://kyro.cat/about.html">
+  <meta property="og:url" content="https://kyro.cat/about">
   <meta property="og:locale" content="en_US">
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/site.css?v=cde64fac6f">
-  <script src="/js/site.js?v=544891e6ce" defer></script>
-  <script src="/js/ascii.js?v=e365ff3aee" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=6e374a6dea">
+  <script src="/js/site.js?v=ba50eaa205" defer></script>
+  <script src="/js/ascii.js?v=a8a8d61fe5" defer></script>
 </head>
 <body class="page-about">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="site">
     <header class="site-header">
-      <a class="site-address" href="/index.html" aria-label="kyro.cat — home">kyro.cat</a>
-      <nav class="navigation" aria-label="Navigation"><a href="/projects.html">projects</a><a href="/about.html" aria-current="page">about</a><a href="/contact.html">contact</a></nav>
-      <nav class="language-switch" aria-label="Language"><a href="/about.html" lang="en" hreflang="en" aria-label="English" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/ca/about.html" lang="ca" hreflang="ca" aria-label="Català">CA</a></nav>
+      <a class="site-address" href="/" aria-label="kyro.cat — home">kyro.cat</a>
+      <nav class="navigation" aria-label="Navigation"><a href="/projects">projects</a><a href="/about" aria-current="page">about</a><a href="/contact">contact</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="/about" lang="en" hreflang="en" aria-label="English" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/ca/about" lang="ca" hreflang="ca" aria-label="Català">CA</a></nav>
     </header>
-    <main id="main" tabindex="-1"><header class="page-heading"><h1>about</h1></header><dl class="facts"><div><dt>location</dt><dd>San Francisco Bay Area, California</dd></div><div><dt>programming</dt><dd>Python, Java, C, PHP, Ruby, JavaScript</dd></div><div><dt>systems</dt><dd>Linux, home lab</dd></div><div><dt>networking</dt><dd>Ubiquiti</dd></div><div><dt>hardware</dt><dd>NVIDIA Jetson, embedded systems</dd></div></dl></main>
-    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Replay the ASCII intro animation" hidden>replay intro</button><a href="https://github.com/kyrofx/website">source <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/ca/about.html" lang="ca" hreflang="ca">Català</a></footer>
+    <main id="main" tabindex="-1"><header class="page-heading"><h1>about</h1></header><dl class="about-location"><div><dt>location</dt><dd>SF Bay Area &amp; VA</dd></div></dl>
+          <section class="homelab" aria-labelledby="homelab-title">
+            <h2 id="homelab-title">homelab</h2>
+            <dl class="lab-stats">
+              <div><dt>RAM</dt><dd>168 <span class="metric-unit">GB</span></dd></div>
+              <div><dt>CPU</dt><dd class="cpu-stats"><span>26 <span class="metric-unit">cores</span></span><span>34 <span class="metric-unit">threads</span></span></dd></div>
+              <div><dt>CUDA cores</dt><dd>20,736</dd></div>
+              <div><dt>onboard memory</dt><dd>176 <span class="metric-unit">GB</span></dd></div>
+            </dl>
+          </section></main>
+    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="Replay the ASCII intro animation" hidden>replay intro</button><a href="https://github.com/kyrofx/website">source <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/ca/about" lang="ca" hreflang="ca">Català</a></footer>
   </div>
 </body>
 </html>

@@ -2,8 +2,6 @@
 from html import escape
 from hashlib import sha256
 from pathlib import Path
-from urllib.parse import urljoin
-import re
 
 ROOT = Path(__file__).resolve().parents[1] / 'public' / 'portfolio'
 DOMAIN = 'https://kyro.cat'
@@ -28,13 +26,9 @@ COPY = {
         'navigation': 'Navigation', 'languages': 'Language', 'skip': 'Skip to content',
         'all': 'all', 'all_projects': 'all projects', 'results': 'projects', 'result': 'project',
         'filter': 'Filter projects by language',
-        'facts': [
-            ('location', 'San Francisco Bay Area, California'),
-            ('programming', 'Python, Java, C, PHP, Ruby, JavaScript'),
-            ('systems', 'Linux, home lab'),
-            ('networking', 'Ubiquiti'),
-            ('hardware', 'NVIDIA Jetson, embedded systems'),
-        ],
+        'location_label': 'location', 'location': 'SF Bay Area & VA',
+        'homelab': 'homelab', 'cores': 'cores', 'threads': 'threads',
+        'cuda': 'CUDA cores', 'onboard_memory': 'onboard memory',
         'email': 'email', 'copy': 'copy', 'copied': 'copied', 'copy_label': 'Copy email address',
         'copy_success': 'Email address copied.',
         'copy_failure': 'Copy unavailable. Select the email address to copy it.',
@@ -48,13 +42,9 @@ COPY = {
         'navigation': 'Navegació', 'languages': 'Llengua', 'skip': 'Ves al contingut',
         'all': 'tots', 'all_projects': 'tots els projectes', 'results': 'projectes', 'result': 'projecte',
         'filter': 'Filtra els projectes per llenguatge',
-        'facts': [
-            ('ubicació', 'Badia de San Francisco, Califòrnia'),
-            ('programació', 'Python, Java, C, PHP, Ruby, JavaScript'),
-            ('sistemes', 'Linux, laboratori domèstic'),
-            ('xarxes', 'Ubiquiti'),
-            ('maquinari', 'NVIDIA Jetson, sistemes encastats'),
-        ],
+        'location_label': 'ubicació', 'location': 'Badia de San Francisco i Virgínia',
+        'homelab': 'laboratori domèstic', 'cores': 'nuclis', 'threads': 'fils',
+        'cuda': 'nuclis CUDA', 'onboard_memory': 'memòria integrada',
         'email': 'correu', 'copy': 'copia', 'copied': 'copiat', 'copy_label': 'Copia l’adreça de correu',
         'copy_success': 'Adreça de correu copiada.',
         'copy_failure': 'No s’ha pogut copiar. Selecciona l’adreça de correu per copiar-la.',
@@ -72,10 +62,13 @@ def asset(path):
     return f'{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}'
 
 
+def route(lang, page):
+    prefix = '/ca' if lang == 'ca' else ''
+    return (prefix or '/') if page == 'index' else f'{prefix}/{page}'
+
+
 def url(lang, page):
-    if lang == 'ca' and page == 'index':
-        return DOMAIN + '/ca'
-    return f'{DOMAIN}/{"ca/" if lang == "ca" else ""}{"" if page == "index" else page + ".html"}'
+    return DOMAIN + route(lang, page)
 
 
 def project_list(projects):
@@ -107,7 +100,7 @@ def content(lang, page):
         <div class="home-content">
           <section class="home-projects" aria-labelledby="projects-title">
             <h2 id="projects-title">{c['nav'][1]}</h2>{project_list(PROJECTS[:4])}
-            <a class="plain-link all-projects" href="projects.html">{c['all_projects']} <span aria-hidden="true">→</span></a>
+            <a class="plain-link all-projects" href="{route(lang, 'projects')}">{c['all_projects']} <span aria-hidden="true">→</span></a>
           </section>
           <section class="home-contact" aria-labelledby="contact-title"><h2 id="contact-title">{c['nav'][3]}</h2>{contacts(c)}</section>
         </div>'''
@@ -120,25 +113,33 @@ def content(lang, page):
           <div class="project-bottom"><a class="plain-link" href="https://github.com/kyrofx?tab=repositories">github / kyrofx {ARROW}</a>
           <span class="filter-status" data-filter-status data-noun="{c['results']}" data-singular="{c['result']}" role="status" aria-live="polite"></span></div>'''
     if page == 'about':
-        facts = ''.join(f'<div><dt>{label}</dt><dd>{escape(value)}</dd></div>' for label, value in c['facts'])
-        return heading + f'<dl class="facts">{facts}</dl>'
+        cuda_count = '20.736' if lang == 'ca' else '20,736'
+        return heading + f'''<dl class="about-location"><div><dt>{c['location_label']}</dt><dd>{escape(c['location'])}</dd></div></dl>
+          <section class="homelab" aria-labelledby="homelab-title">
+            <h2 id="homelab-title">{c['homelab']}</h2>
+            <dl class="lab-stats">
+              <div><dt>RAM</dt><dd>168 <span class="metric-unit">GB</span></dd></div>
+              <div><dt>CPU</dt><dd class="cpu-stats"><span>26 <span class="metric-unit">{c['cores']}</span></span><span>34 <span class="metric-unit">{c['threads']}</span></span></dd></div>
+              <div><dt>{c['cuda']}</dt><dd>{cuda_count}</dd></div>
+              <div><dt>{c['onboard_memory']}</dt><dd>176 <span class="metric-unit">GB</span></dd></div>
+            </dl>
+          </section>'''
     return heading + contacts(c, full=True)
 
 
 def render(lang, page):
     c = COPY[lang]
-    prefix = '../' if lang == 'ca' else ''
     other = 'en' if lang == 'ca' else 'ca'
-    other_path = f'{"../" if lang == "ca" else "ca/"}{page}.html'
+    other_path = route(other, page)
     title = 'kyro' if page == 'index' else c['nav'][PAGES.index(page)] + ' / kyro'
     nav_links = []
-    for route, label in zip(PAGES[1:], c['nav'][1:]):
-        current = ' aria-current="page"' if route == page else ''
-        nav_links.append(f'<a href="{route}.html"{current}>{label}</a>')
+    for target, label in zip(PAGES[1:], c['nav'][1:]):
+        current = ' aria-current="page"' if target == page else ''
+        nav_links.append(f'<a href="{route(lang, target)}"{current}>{label}</a>')
     language_links = []
     for code, label, name in [('en', 'EN', 'English'), ('ca', 'CA', 'Català')]:
         current = ' aria-current="true"' if code == lang else ''
-        href = page + '.html' if code == lang else other_path
+        href = route(code, page)
         language_links.append(f'<a href="{href}" lang="{code}" hreflang="{code}" aria-label="{name}"{current}>{label}</a>')
     home_current = ' aria-current="page"' if page == 'index' else ''
     html = f'''<!doctype html>
@@ -151,7 +152,7 @@ def render(lang, page):
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
-    window.asciiBoot = {{ requested: !matchMedia('(prefers-reduced-motion: reduce)').matches, interacted: false }};
+    window.asciiBoot = {{ requested: true, interacted: false }};
     for (const type of ['pointerdown', 'keydown', 'wheel']) {{
       document.addEventListener(type, () => {{ window.asciiBoot.interacted = true; }}, {{ once: true, capture: true, passive: true }});
     }}
@@ -174,16 +175,16 @@ def render(lang, page):
   <meta property="og:description" content="{c['description']}">
   <meta property="og:url" content="{url(lang, page)}">
   <meta property="og:locale" content="{'ca_ES' if lang == 'ca' else 'en_US'}">
-  <link rel="icon" href="{prefix}img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="{prefix}{asset('css/site.css')}">
-  <script src="{prefix}{asset('js/site.js')}" defer></script>
-  <script src="{prefix}{asset('js/ascii.js')}" defer></script>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/{asset('css/site.css')}">
+  <script src="/{asset('js/site.js')}" defer></script>
+  <script src="/{asset('js/ascii.js')}" defer></script>
 </head>
 <body class="page-{page}">
   <a class="skip-link" href="#main">{c['skip']}</a>
   <div class="site">
     <header class="site-header">
-      <a class="site-address" href="index.html" aria-label="kyro.cat — {c['nav'][0]}"{home_current}>kyro.cat</a>
+      <a class="site-address" href="{route(lang, 'index')}" aria-label="kyro.cat — {c['nav'][0]}"{home_current}>kyro.cat</a>
       <nav class="navigation" aria-label="{c['navigation']}">{''.join(nav_links)}</nav>
       <nav class="language-switch" aria-label="{c['languages']}">{' <span aria-hidden="true">/</span> '.join(language_links)}</nav>
     </header>
@@ -193,11 +194,7 @@ def render(lang, page):
 </body>
 </html>
 '''
-    # Absolute local URLs also work at Next's slashless /ca entry route.
-    base = '/ca/' if lang == 'ca' else '/'
-    return re.sub(r'(href|src)="([^"]+)"',
-                  lambda match: match.group(0) if match.group(2).startswith('#')
-                  else f'{match.group(1)}="{urljoin(base, match.group(2))}"', html)
+    return html
 
 
 def build():

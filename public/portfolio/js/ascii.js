@@ -2,8 +2,8 @@
 // No screenshots, network requests, or runtime dependencies are needed.
 (() => {
   const root = document.documentElement;
-  const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const site = document.querySelector('.site');
+  const routes = new Set(['/', '/projects', '/about', '/contact', '/ca', '/ca/projects', '/ca/about', '/ca/contact']);
   const clamp = (value) => Math.max(0, Math.min(1, value));
   let active = null;
   let navigating = false;
@@ -20,7 +20,7 @@
 
   function ready() {
     clearTimeout(window.asciiSafetyTimer);
-    root.classList.remove('ascii-pending', 'ascii-active', 'ascii-manual');
+    root.classList.remove('ascii-pending', 'ascii-active');
     window.dispatchEvent(new Event('ascii:ready'));
   }
 
@@ -71,7 +71,7 @@
     }
     range.detach();
     context.fillStyle = '#111';
-    site.querySelectorAll('.site-header, .project, .project-list, .site-footer, .facts, .facts > div, .contact-details, .contact-details > div').forEach((element) => {
+    site.querySelectorAll('.site-header, .project, .project-list, .site-footer, .about-location, .about-location > div, .lab-stats, .lab-stats > div, .contact-details, .contact-details > div').forEach((element) => {
       if (!element.getClientRects().length) return;
       const rect = element.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > height) return;
@@ -79,6 +79,10 @@
       for (const edge of ['Top', 'Bottom']) {
         const thickness = parseFloat(style[`border${edge}Width`]);
         if (thickness) context.fillRect(rect.left, edge === 'Top' ? rect.top : rect.bottom - thickness, rect.width, thickness);
+      }
+      for (const edge of ['Left', 'Right']) {
+        const thickness = parseFloat(style[`border${edge}Width`]);
+        if (thickness) context.fillRect(edge === 'Left' ? rect.left : rect.right - thickness, rect.top, thickness, rect.height);
       }
     });
     const nameplate = site.querySelector('.nameplate');
@@ -100,12 +104,11 @@
     return cells;
   }
 
-  function play(direction, duration, userInitiated = false) {
-    if ((preference.matches && !userInitiated) || !site || document.hidden) { ready(); return Promise.resolve(true); }
+  function play(direction, duration) {
+    if (!site || document.hidden) { ready(); return Promise.resolve(true); }
     active?.finish(true);
     clearDeparture();
     root.classList.add('ascii-used');
-    root.classList.toggle('ascii-manual', userInitiated);
     return new Promise((resolve) => {
       let canvas;
       let frame;
@@ -127,7 +130,7 @@
         resolve(proceed);
       };
       let needsSample = true;
-      active = { direction, duration, userInitiated, finish, resize: () => { needsSample = true; } };
+      active = { direction, duration, finish, resize: () => { needsSample = true; } };
       try {
         let width, height, cellWidth, cellHeight, cells, pixelRatio, centerX, centerY;
         canvas = document.createElement('canvas');
@@ -206,16 +209,15 @@
     });
   }
 
-  function enter(duration, userInitiated = false) {
+  function enter(duration) {
     pendingEntrance = null;
-    if (preference.matches && !userInitiated) { ready(); return; }
     // A background tab must not consume the intro before it can be seen.
     if (document.hidden) {
-      pendingEntrance = { duration, userInitiated };
+      pendingEntrance = { duration };
       ready();
       return;
     }
-    play('enter', duration, userInitiated);
+    play('enter', duration);
   }
 
   const skipEntrance = () => {
@@ -238,31 +240,27 @@
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      if (active?.direction === 'enter') pendingEntrance = { duration: active.duration, userInitiated: active.userInitiated };
+      if (active?.direction === 'enter') pendingEntrance = { duration: active.duration };
       active?.finish();
-    } else if (pendingEntrance) enter(pendingEntrance.duration, pendingEntrance.userInitiated);
-  });
-  preference.addEventListener('change', () => {
-    if (preference.matches) { pendingEntrance = null; active?.finish(); clearDeparture(); ready(); }
+    } else if (pendingEntrance) enter(pendingEntrance.duration);
   });
 
   const replay = document.querySelector('[data-ascii-replay]');
   if (replay && site) {
     replay.hidden = false;
-    // An explicit request opts into one playback, including with Reduce Motion.
     replay.addEventListener('click', () => {
       window.scrollTo(0, 0);
-      enter(1850, true);
+      enter(1850);
     });
   }
 
   document.addEventListener('click', async (event) => {
     const link = event.target.closest('a[href]');
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
-      || !link || link.hasAttribute('download') || (link.target && link.target !== '_self') || preference.matches) return;
+      || !link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
     const destination = new URL(link.href, location.href);
     // Real document navigation preserves history, translated routes, and deep links.
-    if (destination.origin !== location.origin || !/\/(?:ca\/)?(?:index|projects|about|contact)?(?:\.html)?$/.test(destination.pathname)) return;
+    if (destination.origin !== location.origin || !routes.has(destination.pathname)) return;
     if (destination.pathname === location.pathname && destination.search === location.search) return;
     event.preventDefault();
     if (navigating) return;
@@ -276,6 +274,6 @@
   let internal = false;
   try { internal = document.referrer && new URL(document.referrer).origin === location.origin; } catch { /* No referrer. */ }
   const boot = window.asciiBoot;
-  if (!boot?.requested || boot.interacted || navigation?.type === 'back_forward' || preference.matches) ready();
+  if (!boot?.requested || boot.interacted || navigation?.type === 'back_forward') ready();
   else enter(internal && navigation?.type !== 'reload' ? 800 : 1850);
 })();
