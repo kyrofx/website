@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>projectes / kyro</title>
+  <meta name="description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
+  <meta name="theme-color" content="#ffffff">
+  <script>
+    // Fail open if the enhancement cannot load; the static page remains usable.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('ascii-pending', 'ascii-used');
+      window.asciiSafetyTimer = setTimeout(() => {
+        document.documentElement.classList.remove('ascii-pending', 'ascii-active');
+        document.querySelector('.ascii-screen')?.remove();
+        window.dispatchEvent(new Event('ascii:abort'));
+        window.dispatchEvent(new Event('ascii:ready'));
+      }, 3500);
+    }
+  </script>
+  <link rel="canonical" href="https://kyro.cat/ca/projects.html">
+  <link rel="alternate" hreflang="en" href="https://kyro.cat/projects.html">
+  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/projects.html">
+  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/projects.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="projectes / kyro">
+  <meta property="og:description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
+  <meta property="og:url" content="https://kyro.cat/ca/projects.html">
+  <meta property="og:locale" content="ca_ES">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/site.js" defer></script>
+  <script src="/js/ascii.js" defer></script>
+</head>
+<body class="page-projects">
+  <a class="skip-link" href="#main">Ves al contingut</a>
+  <div class="site">
+    <header class="site-header">
+      <a class="site-address" href="/ca/index.html" aria-label="kyro.cat — inici">kyro.cat</a>
+      <nav class="navigation" aria-label="Navegació"><a href="/ca/projects.html" aria-current="page">projectes</a><a href="/ca/about.html">sobre mi</a><a href="/ca/contact.html">contacte</a></nav>
+      <nav class="language-switch" aria-label="Llengua"><a href="/projects.html" lang="en" hreflang="en" aria-label="English">EN</a> <span aria-hidden="true">/</span> <a href="/ca/projects.html" lang="ca" hreflang="ca" aria-label="Català" aria-current="true">CA</a></nav>
+    </header>
+    <main id="main" tabindex="-1"><header class="page-heading"><h1>projectes</h1></header><div class="project-filters" role="group" aria-label="Filtra els projectes per llenguatge" hidden><button type="button" data-filter="all" aria-pressed="true">tots</button><button type="button" data-filter="TypeScript" aria-pressed="false">TypeScript</button><button type="button" data-filter="Go" aria-pressed="false">Go</button><button type="button" data-filter="C++" aria-pressed="false">C++</button><button type="button" data-filter="Python" aria-pressed="false">Python</button><button type="button" data-filter="JavaScript" aria-pressed="false">JavaScript</button><button type="button" data-filter="HTML" aria-pressed="false">HTML</button></div>
+          <div class="project-index"><ul class="project-list">
+<li class="project" data-language="TypeScript">
+          <a href="https://github.com/kyrofx/stele"><span class="project-name">stele</span><span class="project-language">TypeScript</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="Go">
+          <a href="https://github.com/kyrofx/img-gallery"><span class="project-name">img-gallery</span><span class="project-language">Go</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="C++">
+          <a href="https://github.com/kyrofx/mrow-vthax14"><span class="project-name">mrow-vthax14</span><span class="project-language">C++</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="C++">
+          <a href="https://github.com/kyrofx/NanoKVM-RemotePowerOn"><span class="project-name">NanoKVM-RemotePowerOn</span><span class="project-language">C++</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="Python">
+          <a href="https://github.com/kyrofx/BroncoParts"><span class="project-name">BroncoParts</span><span class="project-language">Python</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="JavaScript">
+          <a href="https://github.com/kyrofx/archiveviewer_int"><span class="project-name">archiveviewer_int</span><span class="project-language">JavaScript</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="HTML">
+          <a href="https://github.com/kyrofx/CheesyC-public"><span class="project-name">CheesyC-public</span><span class="project-language">HTML</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+</ul></div>
+          <div class="project-bottom"><a class="plain-link" href="https://github.com/kyrofx?tab=repositories">github / kyrofx <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          <span class="filter-status" data-filter-status data-noun="projectes" data-singular="projecte" role="status" aria-live="polite"></span></div></main>
+    <footer class="site-footer"><span>© kyro</span><a href="https://github.com/kyrofx/website">codi font <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/projects.html" lang="en" hreflang="en">English</a></footer>
+  </div>
+</body>
+</html>

@@ -61,12 +61,12 @@ export default function About() {
               <span className="font-serif italic text-accent">effortless</span>.
             </h3>
             <p className="text-body text-muted mb-10">
-              I'm an Electrical and Computer Engineering student.
+              I&apos;m an Electrical and Computer Engineering student.
               From full stack web apps to bare metal server
               infrastructure, I work across the entire technology stack.
             </p>
             <p className="text-body text-muted">
-              I've built custom OAuth systems, infrastructure dashboards,
+              I&apos;ve built custom OAuth systems, infrastructure dashboards,
               and art galleries. I manage my own servers, configure edge
               networks, and have worked with microcontrollers at Apple.
             </p>

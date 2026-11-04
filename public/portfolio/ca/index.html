@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kyro</title>
+  <meta name="description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
+  <meta name="theme-color" content="#ffffff">
+  <script>
+    // Fail open if the enhancement cannot load; the static page remains usable.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('ascii-pending', 'ascii-used');
+      window.asciiSafetyTimer = setTimeout(() => {
+        document.documentElement.classList.remove('ascii-pending', 'ascii-active');
+        document.querySelector('.ascii-screen')?.remove();
+        window.dispatchEvent(new Event('ascii:abort'));
+        window.dispatchEvent(new Event('ascii:ready'));
+      }, 3500);
+    }
+  </script>
+  <link rel="canonical" href="https://kyro.cat/ca">
+  <link rel="alternate" hreflang="en" href="https://kyro.cat/">
+  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca">
+  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="kyro">
+  <meta property="og:description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
+  <meta property="og:url" content="https://kyro.cat/ca">
+  <meta property="og:locale" content="ca_ES">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/site.js" defer></script>
+  <script src="/js/ascii.js" defer></script>
+</head>
+<body class="page-index">
+  <a class="skip-link" href="#main">Ves al contingut</a>
+  <div class="site">
+    <header class="site-header">
+      <a class="site-address" href="/ca/index.html" aria-label="kyro.cat — inici" aria-current="page">kyro.cat</a>
+      <nav class="navigation" aria-label="Navegació"><a href="/ca/projects.html">projectes</a><a href="/ca/about.html">sobre mi</a><a href="/ca/contact.html">contacte</a></nav>
+      <nav class="language-switch" aria-label="Llengua"><a href="/index.html" lang="en" hreflang="en" aria-label="English">EN</a> <span aria-hidden="true">/</span> <a href="/ca/index.html" lang="ca" hreflang="ca" aria-label="Català" aria-current="true">CA</a></nav>
+    </header>
+    <main id="main" tabindex="-1"><div class="nameplate"><h1 class="name" aria-label="Kyro"><span class="letter" data-letter="k" style="--i:0" aria-hidden="true"><span class="letter-glyph">k</span></span><span class="letter" data-letter="y" style="--i:1" aria-hidden="true"><span class="letter-glyph">y</span></span><span class="letter" data-letter="r" style="--i:2" aria-hidden="true"><span class="letter-glyph">r</span></span><span class="letter" data-letter="o" style="--i:3" aria-hidden="true"><span class="letter-glyph">o</span></span></h1></div>
+        <div class="home-content">
+          <section class="home-projects" aria-labelledby="projects-title">
+            <h2 id="projects-title">projectes</h2><ul class="project-list">
+<li class="project" data-language="TypeScript">
+          <a href="https://github.com/kyrofx/stele"><span class="project-name">stele</span><span class="project-language">TypeScript</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="Go">
+          <a href="https://github.com/kyrofx/img-gallery"><span class="project-name">img-gallery</span><span class="project-language">Go</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="C++">
+          <a href="https://github.com/kyrofx/mrow-vthax14"><span class="project-name">mrow-vthax14</span><span class="project-language">C++</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+<li class="project" data-language="C++">
+          <a href="https://github.com/kyrofx/NanoKVM-RemotePowerOn"><span class="project-name">NanoKVM-RemotePowerOn</span><span class="project-language">C++</span><svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </li>
+</ul>
+            <a class="plain-link all-projects" href="/ca/projects.html">tots els projectes <span aria-hidden="true">→</span></a>
+          </section>
+          <section class="home-contact" aria-labelledby="contact-title"><h2 id="contact-title">contacte</h2><ul class="contact-links"><li><a href="https://github.com/kyrofx">github / kyrofx <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a></li><li><a href="mailto:kyro@kyro.dog">kyro@kyro.dog</a></li><li><span>discord / @kyrofx</span></li></ul></section>
+        </div></main>
+    <footer class="site-footer"><span>© kyro</span><a href="https://github.com/kyrofx/website">codi font <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/index.html" lang="en" hreflang="en">English</a></footer>
+  </div>
+</body>
+</html>

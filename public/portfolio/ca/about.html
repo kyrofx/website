@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sobre mi / kyro</title>
+  <meta name="description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
+  <meta name="theme-color" content="#ffffff">
+  <script>
+    // Fail open if the enhancement cannot load; the static page remains usable.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('ascii-pending', 'ascii-used');
+      window.asciiSafetyTimer = setTimeout(() => {
+        document.documentElement.classList.remove('ascii-pending', 'ascii-active');
+        document.querySelector('.ascii-screen')?.remove();
+        window.dispatchEvent(new Event('ascii:abort'));
+        window.dispatchEvent(new Event('ascii:ready'));
+      }, 3500);
+    }
+  </script>
+  <link rel="canonical" href="https://kyro.cat/ca/about.html">
+  <link rel="alternate" hreflang="en" href="https://kyro.cat/about.html">
+  <link rel="alternate" hreflang="ca" href="https://kyro.cat/ca/about.html">
+  <link rel="alternate" hreflang="x-default" href="https://kyro.cat/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="sobre mi / kyro">
+  <meta property="og:description" content="Kyro. Projectes, dades de contacte i repositoris de GitHub.">
+  <meta property="og:url" content="https://kyro.cat/ca/about.html">
+  <meta property="og:locale" content="ca_ES">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/site.js" defer></script>
+  <script src="/js/ascii.js" defer></script>
+</head>
+<body class="page-about">
+  <a class="skip-link" href="#main">Ves al contingut</a>
+  <div class="site">
+    <header class="site-header">
+      <a class="site-address" href="/ca/index.html" aria-label="kyro.cat — inici">kyro.cat</a>
+      <nav class="navigation" aria-label="Navegació"><a href="/ca/projects.html">projectes</a><a href="/ca/about.html" aria-current="page">sobre mi</a><a href="/ca/contact.html">contacte</a></nav>
+      <nav class="language-switch" aria-label="Llengua"><a href="/about.html" lang="en" hreflang="en" aria-label="English">EN</a> <span aria-hidden="true">/</span> <a href="/ca/about.html" lang="ca" hreflang="ca" aria-label="Català" aria-current="true">CA</a></nav>
+    </header>
+    <main id="main" tabindex="-1"><header class="page-heading"><h1>sobre mi</h1></header><dl class="facts"><div><dt>ubicació</dt><dd>Badia de San Francisco, Califòrnia</dd></div><div><dt>programació</dt><dd>Python, Java, C, PHP, Ruby, JavaScript</dd></div><div><dt>sistemes</dt><dd>Linux, laboratori domèstic</dd></div><div><dt>xarxes</dt><dd>Ubiquiti</dd></div><div><dt>maquinari</dt><dd>NVIDIA Jetson, sistemes encastats</dd></div></dl></main>
+    <footer class="site-footer"><span>© kyro</span><a href="https://github.com/kyrofx/website">codi font <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.5"/></svg></a><a href="/about.html" lang="en" hreflang="en">English</a></footer>
+  </div>
+</body>
+</html>
