@@ -5,19 +5,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1] / 'public' / 'portfolio'
 DOMAIN = 'https://kyro.cat'
-EMAIL = 'kyro@kyro.dog'
+EMAIL = 'hello@kyro.dog'
 PAGES = ['index', 'projects', 'about', 'contact']
 
-# Public, non-fork repositories verified against github.com/kyrofx.
-# Names and languages are factual; do not add promotional descriptions.
+# Names, categories and years already published on kyro.cat.
+# Only attach verified public destinations; unlinked work stays plain text.
 PROJECTS = [
-    ('stele', 'TypeScript'),
-    ('img-gallery', 'Go'),
-    ('mrow-vthax14', 'C++'),
-    ('NanoKVM-RemotePowerOn', 'C++'),
-    ('BroncoParts', 'Python'),
-    ('archiveviewer_int', 'JavaScript'),
-    ('CheesyC-public', 'HTML'),
+    ('Aegis', 'software', 'authentication', '2026', 'https://aegis.kyro.dog/'),
+    ('Eos', 'software', 'infrastructure', '2026', None),
+    ('Mousa', 'software', 'gallery', '2026', None),
+    ('Sequoia Edge', 'hardware', 'apple', '2024', None),
+    ('PowerPlay', 'hardware', 'apple', '2023', None),
 ]
 
 COPY = {
@@ -25,8 +23,12 @@ COPY = {
         'nav': ['home', 'projects', 'about', 'contact'],
         'navigation': 'Navigation', 'languages': 'Language', 'skip': 'Skip to content',
         'all': 'all', 'all_projects': 'all projects', 'results': 'projects', 'result': 'project',
-        'filter': 'Filter projects by language',
+        'filter': 'Filter projects by type',
+        'project_types': {'software': 'software', 'hardware': 'hardware'},
+        'project_categories': {'authentication': 'authentication', 'infrastructure': 'infrastructure', 'gallery': 'gallery', 'apple': 'Apple'},
         'location_label': 'location', 'location': 'SF Bay Area & VA',
+        'studying': 'studying', 'studies': 'Electrical & Computer Engineering',
+        'code': 'code', 'systems': 'systems', 'systems_value': 'Servers · networking · embedded',
         'homelab': 'homelab', 'cores': 'cores', 'threads': 'threads',
         'cuda': 'CUDA cores', 'onboard_memory': 'onboard memory',
         'email': 'email', 'copy': 'copy', 'copied': 'copied', 'copy_label': 'Copy email address',
@@ -34,15 +36,19 @@ COPY = {
         'copy_failure': 'Copy unavailable. Select the email address to copy it.',
         'source': 'source',
         'replay': 'replay intro', 'replay_label': 'Replay the ASCII intro animation',
-        'description': 'Kyro. Projects, contact details, and GitHub repositories.',
+        'description': 'Kyro. Projects, homelab, and contact.',
         'foot_language': 'Català',
     },
     'ca': {
         'nav': ['inici', 'projectes', 'sobre mi', 'contacte'],
         'navigation': 'Navegació', 'languages': 'Llengua', 'skip': 'Ves al contingut',
         'all': 'tots', 'all_projects': 'tots els projectes', 'results': 'projectes', 'result': 'projecte',
-        'filter': 'Filtra els projectes per llenguatge',
+        'filter': 'Filtra els projectes per tipus',
+        'project_types': {'software': 'programari', 'hardware': 'maquinari'},
+        'project_categories': {'authentication': 'autenticació', 'infrastructure': 'infraestructura', 'gallery': 'galeria', 'apple': 'Apple'},
         'location_label': 'ubicació', 'location': 'Badia de San Francisco i Virgínia',
+        'studying': 'estudis', 'studies': 'Enginyeria elèctrica i informàtica',
+        'code': 'codi', 'systems': 'sistemes', 'systems_value': 'Servidors · xarxes · sistemes encastats',
         'homelab': 'laboratori domèstic', 'cores': 'nuclis', 'threads': 'fils',
         'cuda': 'nuclis CUDA', 'onboard_memory': 'memòria integrada',
         'email': 'correu', 'copy': 'copia', 'copied': 'copiat', 'copy_label': 'Copia l’adreça de correu',
@@ -50,7 +56,7 @@ COPY = {
         'copy_failure': 'No s’ha pogut copiar. Selecciona l’adreça de correu per copiar-la.',
         'source': 'codi font',
         'replay': 'repeteix', 'replay_label': 'Repeteix l’animació d’introducció ASCII',
-        'description': 'Kyro. Projectes, dades de contacte i repositoris de GitHub.',
+        'description': 'Kyro. Projectes, laboratori domèstic i contacte.',
         'foot_language': 'English',
     },
 }
@@ -71,11 +77,13 @@ def url(lang, page):
     return DOMAIN + route(lang, page)
 
 
-def project_list(projects):
+def project_list(projects, c):
     rows = []
-    for name, language in projects:
-        rows.append(f'''<li class="project" data-language="{language}">
-          <a href="https://github.com/kyrofx/{name}"><span class="project-name">{name}</span><span class="project-language">{language}</span>{ARROW}</a>
+    for name, kind, category, year, href in projects:
+        tag = 'a' if href else 'div'
+        link = f' href="{escape(href, quote=True)}"' if href else ''
+        rows.append(f'''<li class="project" data-kind="{kind}">
+          <{tag} class="project-entry"{link}><span class="project-name">{escape(name)}{f' {ARROW}' if href else ''}</span><span class="project-category">{c['project_categories'][category]}</span><span class="project-year">{year}</span></{tag}>
         </li>''')
     return '<ul class="project-list">\n' + '\n'.join(rows) + '\n</ul>'
 
@@ -99,22 +107,27 @@ def content(lang, page):
         return f'''<div class="nameplate"><h1 class="name" aria-label="Kyro">{letters}</h1></div>
         <div class="home-content">
           <section class="home-projects" aria-labelledby="projects-title">
-            <h2 id="projects-title">{c['nav'][1]}</h2>{project_list(PROJECTS[:4])}
+            <h2 id="projects-title">{c['nav'][1]}</h2>{project_list(PROJECTS[:4], c)}
             <a class="plain-link all-projects" href="{route(lang, 'projects')}">{c['all_projects']} <span aria-hidden="true">→</span></a>
           </section>
           <section class="home-contact" aria-labelledby="contact-title"><h2 id="contact-title">{c['nav'][3]}</h2>{contacts(c)}</section>
         </div>'''
     heading = f'<header class="page-heading"><h1>{c["nav"][PAGES.index(page)]}</h1></header>'
     if page == 'projects':
-        options = ['all'] + list(dict.fromkeys(language for _, language in PROJECTS))
-        buttons = ''.join(f'<button type="button" data-filter="{language}" aria-pressed="{str(language == "all").lower()}">{c["all"] if language == "all" else language}</button>' for language in options)
+        options = ['all', *c['project_types']]
+        buttons = ''.join(f'<button type="button" data-filter="{kind}" aria-pressed="{str(kind == "all").lower()}">{c["all"] if kind == "all" else c["project_types"][kind]}</button>' for kind in options)
         return heading + f'''<div class="project-filters" role="group" aria-label="{c['filter']}" hidden>{buttons}</div>
-          <div class="project-index">{project_list(PROJECTS)}</div>
+          <div class="project-index">{project_list(PROJECTS, c)}</div>
           <div class="project-bottom"><a class="plain-link" href="https://github.com/kyrofx?tab=repositories">github / kyrofx {ARROW}</a>
           <span class="filter-status" data-filter-status data-noun="{c['results']}" data-singular="{c['result']}" role="status" aria-live="polite"></span></div>'''
     if page == 'about':
         cuda_count = '20.736' if lang == 'ca' else '20,736'
-        return heading + f'''<dl class="about-location"><div><dt>{c['location_label']}</dt><dd>{escape(c['location'])}</dd></div></dl>
+        return heading + f'''<dl class="about-facts">
+            <div><dt>{c['location_label']}</dt><dd>{escape(c['location'])}</dd></div>
+            <div><dt>{c['studying']}</dt><dd>{escape(c['studies'])}</dd></div>
+            <div><dt>{c['code']}</dt><dd>Rust · TypeScript · Python</dd></div>
+            <div><dt>{c['systems']}</dt><dd>{escape(c['systems_value'])}</dd></div>
+          </dl>
           <section class="homelab" aria-labelledby="homelab-title">
             <h2 id="homelab-title">{c['homelab']}</h2>
             <dl class="lab-stats">

@@ -71,7 +71,7 @@
     }
     range.detach();
     context.fillStyle = '#111';
-    site.querySelectorAll('.site-header, .project, .project-list, .site-footer, .about-location, .about-location > div, .lab-stats, .lab-stats > div, .contact-details, .contact-details > div').forEach((element) => {
+    site.querySelectorAll('.site-header, .project, .project-list, .site-footer, .about-facts, .about-facts > div, .lab-stats, .lab-stats > div, .contact-details, .contact-details > div').forEach((element) => {
       if (!element.getClientRects().length) return;
       const rect = element.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > height) return;

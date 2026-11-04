@@ -137,7 +137,7 @@ document.querySelectorAll('.project a').forEach((link) => {
 
 function observeEntrances() {
   if (!('IntersectionObserver' in window)) return;
-  const targets = document.querySelectorAll('.home-content h2, .project, .contact-links li, .about-location > div, .homelab h2, .lab-stats > div, .contact-details > div, .site-footer');
+  const targets = document.querySelectorAll('.home-content h2, .project, .contact-links li, .about-facts > div, .homelab h2, .lab-stats > div, .contact-details > div, .site-footer');
   const assembled = new WeakSet();
   if (document.documentElement.classList.contains('ascii-used')) {
     targets.forEach((target) => {
@@ -174,7 +174,7 @@ if (filters) {
     buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
     let count = 0;
     projects.forEach((project) => {
-      const matches = button.dataset.filter === 'all' || project.dataset.language === button.dataset.filter;
+      const matches = button.dataset.filter === 'all' || project.dataset.kind === button.dataset.filter;
       project.hidden = !matches;
       if (matches) count++;
     });

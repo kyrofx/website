@@ -33,7 +33,7 @@ In a managed cloud environment with a TLS proxy, Next's existing Google Fonts bu
 
 After changing shared content, run `python3 scripts/build_site.py` and commit the generated HTML and sitemap with it. Python is an editing tool; deployment uses the committed output and does not require Python.
 
-Keep visible content to names, genuine facts, functional labels and links. Do not add eyebrows, taglines, project blurbs or decorative descriptions. About contains the supplied location and homelab figures; the onboard memory figure is not labelled as VRAM.
+Keep visible content to names, genuine facts, functional labels and links. Do not add eyebrows, taglines, project blurbs or decorative descriptions. Content is curated from the existing public kyro.cat site and the user's supplied facts; see [content sources](docs/content-sources.md). Keep privately shared identities, affiliations, URLs and career details out of this public site and repository. Project rows link only to verified public destinations; otherwise they remain plain text. About combines compact public facts with the supplied location and homelab figures; the onboard memory figure is not labelled as VRAM.
 
 The initial ASCII entrance lasts about 1.85 seconds; internal transitions use a 180 ms exit and 800 ms arrival. Background tabs defer the entrance until visible, and resizing rebuilds its character grid without cancelling playback. Interaction skips the entrance, and failed enhancement scripts restore the underlying HTML. The footer’s replay button restarts the intro. Per the site owner's instruction, the portfolio's animations play regardless of the system's reduced-motion setting. Generated CSS and script URLs include content hashes so deployments refresh cached assets.
 

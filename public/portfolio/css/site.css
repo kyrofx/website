@@ -59,15 +59,19 @@ main { flex: 1; }
 h2 { font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 24px; }
 .project-list { border-top: 1px solid var(--line); }
 .project { border-bottom: 1px solid var(--line); }
-.project a { display: grid; grid-template-columns: minmax(0, 1fr) auto 24px; align-items: center; gap: 24px; padding: 22px 0; text-decoration: none; position: relative; isolation: isolate; transition: transform 260ms var(--ease); }
+.project-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto 36px; align-items: center; gap: 24px; padding: 22px 0; text-decoration: none; position: relative; isolation: isolate; transition: transform 260ms var(--ease); }
 .project a::before { content: ''; position: absolute; inset: -1px -12px; background: var(--ink); z-index: -1; transform: scaleY(0); transform-origin: var(--entry-edge, bottom); transition: transform 320ms var(--ease), box-shadow 320ms var(--ease); }
-.project-name { overflow-wrap: anywhere; transition: transform 240ms var(--ease); }
-.project-language { font-size: 11px; color: var(--muted); }
+.project-name { display: inline-flex; align-items: center; gap: 6px; overflow-wrap: anywhere; transition: transform 240ms var(--ease); }
+.project-category { font-size: 11px; color: var(--muted); }
+.project-year { font-size: 11px; color: var(--muted); text-align: right; }
+div.project-entry { transition: background 250ms; }
+div.project-entry:hover { background: #f6f6f6; }
 .project .arrow { width: 24px; height: 24px; padding: 5px; box-sizing: border-box; transition: transform 420ms var(--ease), background 220ms, color 220ms; }
 .project a:hover, .project a:focus-visible { color: var(--paper); }
 .project a:hover::before, .project a:focus-visible::before { transform: scaleY(1); box-shadow: 4px 4px 0 #c9c9c9; }
 .project a:hover .project-name, .project a:focus-visible .project-name { transform: translateX(8px); }
-.project a:hover .project-language, .project a:focus-visible .project-language { color: #c5c5c5; }
+.project a:hover .project-category, .project a:focus-visible .project-category { color: #c5c5c5; }
+.project a:hover .project-year, .project a:focus-visible .project-year { color: #c5c5c5; }
 .project a:hover .arrow, .project a:focus-visible .arrow { transform: translateX(-4px) rotate(45deg); background: var(--paper); color: var(--ink); }
 .project a:active .project-name { transform: translate(8px, 2px); }
 .plain-link { display: inline-flex; align-items: center; gap: 12px; }
@@ -91,12 +95,13 @@ h2 { font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 24px; }
 .project-filters button[aria-pressed=true] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .project-filters button:hover { border-color: var(--ink); box-shadow: 2px 2px 0 var(--ink); transform: translate(-1px, -1px); }
 .project-filters button:active { transform: translate(1px, 1px); box-shadow: none; }
-.project-index .project a { padding-block: 25px; font-size: 20px; }
-.project-index .project-language { font-size: 12px; }
+.project-index .project-entry { padding-block: 25px; font-size: 20px; }
+.project-index .project-category { font-size: 12px; }
 .project-bottom { display: flex; justify-content: space-between; gap: 24px; font-size: 12px; padding: 32px 0 56px; }
 .filter-status { color: var(--muted); }
-.about-location, .contact-details { border-top: 3px solid var(--ink); }
-.about-location > div, .contact-details > div { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 40px; border-bottom: 1px solid var(--line); padding: 27px 0; line-height: 1.7; }
+.about-facts, .contact-details { border-top: 3px solid var(--ink); }
+.about-facts > div, .contact-details > div { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 40px; border-bottom: 1px solid var(--line); padding: 27px 0; line-height: 1.7; }
+.about-facts > div { padding: 21px 0; }
 .homelab { margin: 38px 0 64px; }
 .homelab h2 { margin-bottom: 20px; }
 .lab-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
@@ -131,9 +136,9 @@ dd { font-size: 17px; overflow-wrap: anywhere; }
 @media (max-width: 1000px) {
   .site { width: calc(100% - 72px); }
   .home-content { grid-template-columns: minmax(0, 1fr) 220px; gap: 45px; }
-  .project a { gap: 16px; }
-  .home-projects .project-language { display: none; }
-  .home-projects .project a { grid-template-columns: minmax(0, 1fr) 16px; }
+  .project-entry { gap: 16px; }
+  .home-projects .project-category { display: none; }
+  .home-projects .project-entry { grid-template-columns: minmax(0, 1fr) 36px; }
   .name { font-size: 35vw; }
 }
 
@@ -149,9 +154,9 @@ dd { font-size: 17px; overflow-wrap: anywhere; }
   .name { font-size: 43vw; }
   .home-content { grid-template-columns: 1fr; gap: 44px; padding: 30px 0 44px; }
   h2 { margin-bottom: 22px; }
-  .home-projects .project-language { display: block; font-size: 10px; }
-  .home-projects .project a { grid-template-columns: minmax(0, 1fr) auto 24px; }
-  .project a { gap: 12px; padding-block: 20px; }
+  .home-projects .project-category { display: block; font-size: 10px; }
+  .home-projects .project-entry { grid-template-columns: minmax(0, 1fr) auto 32px; }
+  .project-entry { gap: 12px; padding-block: 20px; }
   .project-name { font-size: 12px; }
   .all-projects { margin-top: 24px; }
   .contact-links { gap: 20px; }
@@ -160,10 +165,10 @@ dd { font-size: 17px; overflow-wrap: anywhere; }
   .page-heading h1 { font-size: clamp(46px, 12vw, 70px); }
   .project-filters { gap: 3px; padding-bottom: 24px; }
   .project-filters button { font-size: 11px; padding: 8px; }
-  .project-index .project a { padding-block: 23px; gap: 12px; }
-  .project-index .project-language { font-size: 10px; }
+  .project-index .project-entry { padding-block: 23px; gap: 12px; }
+  .project-index .project-category { font-size: 10px; }
   .project-bottom { font-size: 11px; flex-wrap: wrap; padding: 28px 0 42px; }
-  .about-location > div, .contact-details > div { grid-template-columns: 1fr; gap: 10px; padding: 22px 0; }
+  .about-facts > div, .contact-details > div { grid-template-columns: 1fr; gap: 10px; padding: 22px 0; }
   .homelab { margin: 30px 0 42px; }
   .lab-stats { grid-template-columns: 1fr; }
   .lab-stats > div:nth-child(n) { padding: 22px 0; border-right: 0; }
