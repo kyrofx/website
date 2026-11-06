@@ -37,7 +37,7 @@ COPY = {
         'source': 'source',
         'replay': 'replay intro', 'replay_label': 'Replay the ASCII intro animation',
         'description': 'Kyro. Projects, homelab, and contact.',
-        'foot_language': 'Català',
+        'foot_language': 'Català', 'pride_label': 'Gay men’s pride flag',
     },
     'ca': {
         'nav': ['inici', 'projectes', 'sobre mi', 'contacte'],
@@ -57,7 +57,7 @@ COPY = {
         'source': 'codi font',
         'replay': 'repeteix', 'replay_label': 'Repeteix l’animació d’introducció ASCII',
         'description': 'Kyro. Projectes, laboratori domèstic i contacte.',
-        'foot_language': 'English',
+        'foot_language': 'English', 'pride_label': 'Bandera de l’orgull gai',
     },
 }
 
@@ -202,7 +202,7 @@ def render(lang, page):
       <nav class="language-switch" aria-label="{c['languages']}">{' <span aria-hidden="true">/</span> '.join(language_links)}</nav>
     </header>
     <main id="main" tabindex="-1">{content(lang, page)}</main>
-    <footer class="site-footer"><span>© kyro</span><button class="replay-intro" type="button" data-ascii-replay aria-label="{c['replay_label']}" hidden>{c['replay']}</button><a href="https://github.com/kyrofx/website">{c['source']} {ARROW}</a><a href="{other_path}" lang="{other}" hreflang="{other}">{c['foot_language']}</a></footer>
+    <footer class="site-footer"><span class="footer-signature">© kyro <span class="pride-mark" role="img" aria-label="{c['pride_label']}"></span></span><button class="replay-intro" type="button" data-ascii-replay aria-label="{c['replay_label']}" hidden>{c['replay']}</button><a href="https://github.com/kyrofx/website">{c['source']} {ARROW}</a><a href="{other_path}" lang="{other}" hreflang="{other}">{c['foot_language']}</a></footer>
   </div>
 </body>
 </html>

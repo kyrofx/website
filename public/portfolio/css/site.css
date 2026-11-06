@@ -83,7 +83,8 @@ div.project-entry:hover { background: #f6f6f6; }
 .contact-links a:hover .arrow { transform: translate(2px, -2px); }
 .contact-links span { color: var(--muted); }
 .site-footer { display: flex; align-items: center; gap: 30px; border-top: 1px solid var(--ink); padding: 22px 0 28px; color: var(--muted); font-size: 10px; }
-.site-footer span { margin-right: auto; }
+.footer-signature { margin-right: auto; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.pride-mark { display: inline-block; flex: 0 0 21px; width: 21px; height: 7px; background: linear-gradient(to right, #078d70 0% 14.2857%, #26ceaa 14.2857% 28.5714%, #98e8c1 28.5714% 42.8571%, #fff 42.8571% 57.1429%, #7bade2 57.1429% 71.4286%, #5049cc 71.4286% 85.7143%, #3d1a78 85.7143% 100%); }
 .site-footer a { display: inline-flex; align-items: center; gap: 7px; }
 .replay-intro { border: 0; padding: 4px 0; background: none; text-decoration: underline; text-underline-offset: 4px; }
 .replay-intro:hover { color: var(--ink); }
