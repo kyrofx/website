@@ -8,24 +8,15 @@ DOMAIN = 'https://kyro.cat'
 EMAIL = 'hello@kyro.dog'
 PAGES = ['index', 'projects', 'about', 'contact']
 
-# Names, categories and years already published on kyro.cat.
-# Only attach verified public destinations; unlinked work stays plain text.
-PROJECTS = [
-    ('Aegis', 'software', 'authentication', '2026', 'https://aegis.kyro.dog/'),
-    ('Eos', 'software', 'infrastructure', '2026', None),
-    ('Mousa', 'software', 'gallery', '2026', None),
-    ('Sequoia Edge', 'hardware', 'apple', '2024', None),
-    ('PowerPlay', 'hardware', 'apple', '2023', None),
-]
+# Deliberately empty project slots; no real names, dates or destinations.
+PROJECTS = range(1, 6)
+EMBED_TEXT = 'kyro dot cat website'
 
 COPY = {
     'en': {
         'nav': ['home', 'projects', 'about', 'contact'],
         'navigation': 'Navigation', 'languages': 'Language', 'skip': 'Skip to content',
         'all': 'all', 'all_projects': 'all projects', 'results': 'projects', 'result': 'project',
-        'filter': 'Filter projects by type',
-        'project_types': {'software': 'software', 'hardware': 'hardware'},
-        'project_categories': {'authentication': 'authentication', 'infrastructure': 'infrastructure', 'gallery': 'gallery', 'apple': 'Apple'},
         'location_label': 'location', 'location': 'SF Bay Area & VA',
         'studying': 'studying', 'studies': 'Electrical & Computer Engineering',
         'code': 'code', 'systems': 'systems', 'systems_value': 'Servers · networking · embedded',
@@ -34,18 +25,13 @@ COPY = {
         'email': 'email', 'copy': 'copy', 'copied': 'copied', 'copy_label': 'Copy email address',
         'copy_success': 'Email address copied.',
         'copy_failure': 'Copy unavailable. Select the email address to copy it.',
-        'source': 'source',
         'replay': 'replay intro', 'replay_label': 'Replay the ASCII intro animation',
-        'description': 'Kyro. Projects, homelab, and contact.',
         'foot_language': 'Català', 'pride_label': 'Gay men’s pride flag',
     },
     'ca': {
         'nav': ['inici', 'projectes', 'sobre mi', 'contacte'],
         'navigation': 'Navegació', 'languages': 'Llengua', 'skip': 'Ves al contingut',
         'all': 'tots', 'all_projects': 'tots els projectes', 'results': 'projectes', 'result': 'projecte',
-        'filter': 'Filtra els projectes per tipus',
-        'project_types': {'software': 'programari', 'hardware': 'maquinari'},
-        'project_categories': {'authentication': 'autenticació', 'infrastructure': 'infraestructura', 'gallery': 'galeria', 'apple': 'Apple'},
         'location_label': 'ubicació', 'location': 'Badia de San Francisco i Virgínia',
         'studying': 'estudis', 'studies': 'Enginyeria elèctrica i informàtica',
         'code': 'codi', 'systems': 'sistemes', 'systems_value': 'Servidors · xarxes · sistemes encastats',
@@ -54,9 +40,7 @@ COPY = {
         'email': 'correu', 'copy': 'copia', 'copied': 'copiat', 'copy_label': 'Copia l’adreça de correu',
         'copy_success': 'Adreça de correu copiada.',
         'copy_failure': 'No s’ha pogut copiar. Selecciona l’adreça de correu per copiar-la.',
-        'source': 'codi font',
         'replay': 'repeteix', 'replay_label': 'Repeteix l’animació d’introducció ASCII',
-        'description': 'Kyro. Projectes, laboratori domèstic i contacte.',
         'foot_language': 'English', 'pride_label': 'Bandera de l’orgull gai',
     },
 }
@@ -79,11 +63,9 @@ def url(lang, page):
 
 def project_list(projects, c):
     rows = []
-    for name, kind, category, year, href in projects:
-        tag = 'a' if href else 'div'
-        link = f' href="{escape(href, quote=True)}"' if href else ''
-        rows.append(f'''<li class="project" data-kind="{kind}">
-          <{tag} class="project-entry"{link}><span class="project-name">{escape(name)}{f' {ARROW}' if href else ''}</span><span class="project-category">{c['project_categories'][category]}</span><span class="project-year">{year}</span></{tag}>
+    for number in projects:
+        rows.append(f'''<li class="project">
+          <div class="project-entry"><span class="project-name">{c['result']} {number:02d}</span><span class="project-category">—</span><span class="project-year">—</span></div>
         </li>''')
     return '<ul class="project-list">\n' + '\n'.join(rows) + '\n</ul>'
 
@@ -114,12 +96,7 @@ def content(lang, page):
         </div>'''
     heading = f'<header class="page-heading"><h1>{c["nav"][PAGES.index(page)]}</h1></header>'
     if page == 'projects':
-        options = ['all', *c['project_types']]
-        buttons = ''.join(f'<button type="button" data-filter="{kind}" aria-pressed="{str(kind == "all").lower()}">{c["all"] if kind == "all" else c["project_types"][kind]}</button>' for kind in options)
-        return heading + f'''<div class="project-filters" role="group" aria-label="{c['filter']}" hidden>{buttons}</div>
-          <div class="project-index">{project_list(PROJECTS, c)}</div>
-          <div class="project-bottom"><a class="plain-link" href="https://github.com/kyrofx?tab=repositories">github / kyrofx {ARROW}</a>
-          <span class="filter-status" data-filter-status data-noun="{c['results']}" data-singular="{c['result']}" role="status" aria-live="polite"></span></div>'''
+        return heading + f'<div class="project-index">{project_list(PROJECTS, c)}</div>'
     if page == 'about':
         cuda_count = '20.736' if lang == 'ca' else '20,736'
         return heading + f'''<dl class="about-facts">
@@ -161,7 +138,7 @@ def render(lang, page):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
-  <meta name="description" content="{c['description']}">
+  <meta name="description" content="{EMBED_TEXT}">
   <meta name="theme-color" content="#ffffff">
   <script>
     // Fail open if the enhancement cannot load; the static page remains usable.
@@ -184,8 +161,11 @@ def render(lang, page):
   <link rel="alternate" hreflang="ca" href="{url('ca', page)}">
   <link rel="alternate" hreflang="x-default" href="{url('en', page)}">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="{title}">
-  <meta property="og:description" content="{c['description']}">
+  <meta property="og:title" content="{EMBED_TEXT}">
+  <meta property="og:description" content="{EMBED_TEXT}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{EMBED_TEXT}">
+  <meta name="twitter:description" content="{EMBED_TEXT}">
   <meta property="og:url" content="{url(lang, page)}">
   <meta property="og:locale" content="{'ca_ES' if lang == 'ca' else 'en_US'}">
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
@@ -202,7 +182,7 @@ def render(lang, page):
       <nav class="language-switch" aria-label="{c['languages']}">{' <span aria-hidden="true">/</span> '.join(language_links)}</nav>
     </header>
     <main id="main" tabindex="-1">{content(lang, page)}</main>
-    <footer class="site-footer"><span class="footer-signature">© kyro <span class="pride-mark" role="img" aria-label="{c['pride_label']}"></span></span><button class="replay-intro" type="button" data-ascii-replay aria-label="{c['replay_label']}" hidden>{c['replay']}</button><a href="https://github.com/kyrofx/website">{c['source']} {ARROW}</a><a href="{other_path}" lang="{other}" hreflang="{other}">{c['foot_language']}</a></footer>
+    <footer class="site-footer"><span class="footer-signature">© kyro <span class="pride-mark" role="img" aria-label="{c['pride_label']}"></span></span><button class="replay-intro" type="button" data-ascii-replay aria-label="{c['replay_label']}" hidden>{c['replay']}</button><a href="{other_path}" lang="{other}" hreflang="{other}">{c['foot_language']}</a></footer>
   </div>
 </body>
 </html>

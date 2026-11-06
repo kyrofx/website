@@ -93,17 +93,8 @@ class StaticSiteTests(unittest.TestCase):
                 self.assertNotIn('data-dial', html)
                 self.assertNotIn('Always curious', html)
 
-    def test_project_links_point_to_the_curated_destinations(self):
-        html = SITE.render('en', 'projects')
-        for name, kind, category, year, href in SITE.PROJECTS:
-            if href:
-                self.assertIn(f'href="{href}"', html)
-            self.assertIn(f'<span class="project-name">{name}', html)
-            self.assertIn(f'data-kind="{kind}"', html)
-            self.assertIn(f'<span class="project-year">{year}</span>', html)
-
     def test_external_links_stay_on_approved_public_destinations(self):
-        approved = {'kyro.cat', 'github.com', 'aegis.kyro.dog'}
+        approved = {'kyro.cat', 'github.com'}
         for lang in SITE.COPY:
             for page in SITE.PAGES:
                 for tag, attrs in Document(SITE.render(lang, page)).tags:
